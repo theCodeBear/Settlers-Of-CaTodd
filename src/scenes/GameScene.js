@@ -10,7 +10,7 @@ const WHEAT_KEY = 'wheat';
 const ORE_KEY = 'ore';
 
 const TILES_IN_GAME = 19;
-const DESERT_SEVEN = 7;
+const DESERT_CANT_BE_ROLLED = 0;
 
 const BOARD_MIDDLELEFT_X_COORD = 200;
 const BOARD_MIDDLELEFT_Y_COORD = 500;
@@ -21,7 +21,8 @@ const TILE_Y_FULL_OFFSET = 150;
 export default class GameScene extends Phaser.Scene {
   constructor() {
     super('game-scene');
-    this.board = undefined;
+    this.boardTileData = [];
+    this.tileContainers = [];
     this.resources = [
       DESERT_KEY,
       ORE_KEY, ORE_KEY, ORE_KEY,
@@ -36,13 +37,24 @@ export default class GameScene extends Phaser.Scene {
       4, 4,
       5, 5,
       6, 6,
-      // 7,
       8, 8,
       9, 9,
       10, 10,
       11, 11,
       12
     ];
+    this.numberDots = {
+      '2': 1,
+      '3': 2,
+      '4': 3,
+      '5': 4,
+      '6': 5,
+      '8': 5,
+      '9': 4,
+      '10': 3,
+      '11': 2,
+      '12': 1
+    }
   }
 
   preload() {
@@ -56,12 +68,15 @@ export default class GameScene extends Phaser.Scene {
 
   create() {
     this.cameras.main.setBackgroundColor('#37d');
-    this.board = this.createBoardPositions();
-    console.log('board:', this.board);
+    this.boardTileData = this.createBoardPositions();
+    console.log('board:', this.boardTileData);
     let tiles = this.createAllTiles();
     console.log('tiles:', tiles);
     this.drawBoard();
-    this.addResourceNumbersToGraphicTiles();
+
+    // let graphics = this.add.graphics();
+    // graphics.fillStyle(0xffffff, 1);
+    // graphics.fillCircle(0, 0, 40);
   }
 
   update() {
@@ -97,9 +112,41 @@ export default class GameScene extends Phaser.Scene {
   }
 
   drawBoard() {
-    this.board.forEach(tile =>
-      this.add.image(tile.coordX, tile.coordY, tile.resource)
-    );
+    this.boardTileData.forEach((tile, i) => {
+      this.tileContainers = this.tileContainers.concat(this.add.container(tile.coordX, tile.coordY));
+      let tileImage = this.add.image(0, 0, tile.resource);
+      this.tileContainers[i].add(tileImage);
+
+      let graphics = this.add.graphics();
+
+      if (tile.resource !== DESERT_KEY) {
+        graphics.fillStyle(0xffffff, 0.8);
+        graphics.fillCircle(0, 0, 35);
+        this.addResourceNumbersToGraphicTiles(graphics, tile, i);
+      }
+    });
+  }
+
+  addResourceNumbersToGraphicTiles(graphics, tileData, index) {
+    const textStyle = { fontSize: '32px', color: tileData.number === 6 || tileData.number === 8 ? '#ff8c00' : '#000' };
+    const resourceNumberText = this.add.text(0, 0, tileData.number, textStyle);
+    resourceNumberText.setOrigin(0.5, 0.5);
+
+    this.createNumberDots(graphics, tileData.number);
+
+    this.tileContainers[index].add(graphics);
+    this.tileContainers[index].add(resourceNumberText);
+  }
+
+  createNumberDots(graphics, resourceNumber) {
+    const numberOfDots = this.numberDots[resourceNumber];
+    let color, xOffset, yOffset = 20, radius = 2, alpha = 1.0;
+    for (let i = 0; i < numberOfDots; i++) {
+      color = resourceNumber === 6 || resourceNumber === 8 ? 0xff8c00 : 0x000000;
+      xOffset = (i * 6) - ((numberOfDots - 1) * 3);
+      graphics.fillStyle(color, alpha);
+      graphics.fillCircle(xOffset, yOffset, radius);
+    }
   }
 
   // custom class methods...
@@ -109,9 +156,10 @@ export default class GameScene extends Phaser.Scene {
     let resourceNumbers = this.resourceNumbers.slice();
     let resourcesLeft = TILES_IN_GAME;
 
-    this.board.forEach(tile => {
+    this.boardTileData.forEach(tile => {
       let resourceIndex = pickRandomTile(resourcesLeft);
-      let resourceNumbersIndex = pickRandomTile(resourcesLeft);
+      let resourceNumbersIndex = pickRandomTile(resourcesLeft - 1); // minus 1 because there is no desert resource number
+
       let { coordX, coordY } = calculateTilePixelCoords(tile.x, tile.y);
 
       if (resources[resourceIndex] === DESERT_KEY)
@@ -122,7 +170,7 @@ export default class GameScene extends Phaser.Scene {
           coordX,
           coordY,
           resource: resources[resourceIndex],
-          number: resourceNumbers[resourceNumbersIndex] || DESERT_SEVEN
+          number: resourceNumbers[resourceNumbersIndex] || DESERT_CANT_BE_ROLLED
         })
       );
 
@@ -135,10 +183,6 @@ export default class GameScene extends Phaser.Scene {
     });
 
     return tiles;
-  }
-
-  addResourceNumbersToGraphicTiles() {
-
   }
 
 }
