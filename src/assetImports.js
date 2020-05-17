@@ -1,11 +1,17 @@
 // import assets and export from here to make importing elsewhere easier. like so:
-//
-//
-// import sky from 'url:../public/img/sky.png';
-// import guy from 'url:../public/img/guy.png';
-//
-// export default {
-//   sky,
-//   guy
-// };
 
+import brick from 'url:../public/img/Catan_brick.png';
+import desert from 'url:../public/img/Catan_desert.png';
+import forest from 'url:../public/img/Catan_forest.png';
+import ore from 'url:../public/img/Catan_ore.png';
+import sheep from 'url:../public/img/Catan_sheep.png';
+import wheat from 'url:../public/img/Catan_wheat.png';
+
+export default {
+    brick,
+    desert,
+    forest,
+    ore,
+    sheep,
+    wheat
+};

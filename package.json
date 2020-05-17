@@ -1,7 +1,7 @@
 {
-  "name": "phaserStarter",
+  "name": "settlers of catodd",
   "version": "1.0.0",
-  "description": "Starter project for a Phaser game",
+  "description": "Settlers of CaTodd",
   "main": "main.js",
   "scripts": {
     "start": "parcel src/index.html",
