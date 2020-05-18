@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 import images from '../assetImports';
 
 
-const FOREST_KEY = 'forest';
+const WOOD_KEY = 'wood';
 const DESERT_KEY = 'desert';
 const BRICK_KEY = 'brick';
 const SHEEP_KEY = 'sheep';
@@ -25,7 +25,7 @@ const TILES_IN_GAME = 19;
 const DESERT_CANT_BE_ROLLED = 0;
 
 const BOARD_MIDDLELEFT_X_COORD = 600;
-const BOARD_MIDDLELEFT_Y_COORD = 500;
+const BOARD_MIDDLELEFT_Y_COORD = 450;
 const TILE_X_FULL_OFFSET = 173;
 const TILE_Y_FULL_OFFSET = 150;
 
@@ -42,7 +42,7 @@ export default class GameScene extends Phaser.Scene {
       BRICK_KEY, BRICK_KEY, BRICK_KEY,
       SHEEP_KEY, SHEEP_KEY, SHEEP_KEY, SHEEP_KEY,
       WHEAT_KEY, WHEAT_KEY, WHEAT_KEY, WHEAT_KEY,
-      FOREST_KEY, FOREST_KEY, FOREST_KEY, FOREST_KEY,
+      WOOD_KEY, WOOD_KEY, WOOD_KEY, WOOD_KEY,
     ];
     this.resourceNumbers = [
       2,
@@ -73,7 +73,7 @@ export default class GameScene extends Phaser.Scene {
       [BRICK_KEY]: 19,
       [SHEEP_KEY]: 19,
       [WHEAT_KEY]: 19,
-      [FOREST_KEY]: 19
+      [WOOD_KEY]: 19
     };
     this.developmentCards = {
       [KNIGHT_KEY]: 14,
@@ -85,7 +85,7 @@ export default class GameScene extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image(FOREST_KEY, images.forest);
+    this.load.image(WOOD_KEY, images.forest);
     this.load.image(DESERT_KEY, images.desert);
     this.load.image(SHEEP_KEY, images.sheep);
     this.load.image(BRICK_KEY, images.brick);
@@ -107,11 +107,26 @@ export default class GameScene extends Phaser.Scene {
     console.log('resource cards', this.resourceCards);
     console.log('dev cards', this.developmentCards);
 
-    this.add.image(200, 200, BRICK_CARD_KEY);
-    this.add.image(200, 450, SHEEP_CARD_KEY);
-    this.add.image(200, 700, WHEAT_CARD_KEY);
-    this.add.image(400, 200, WOOD_CARD_KEY);
-    this.add.image(400, 450, ORE_CARD_KEY);
+
+    this.createResourceCard(BRICK_CARD_KEY, 200, 200);
+    this.createResourceCard(BRICK_CARD_KEY, 210, 210);
+    this.createResourceCard(BRICK_CARD_KEY, 220, 220);
+
+    this.createResourceCard(SHEEP_CARD_KEY, 200, 450);
+    this.createResourceCard(SHEEP_CARD_KEY, 210, 460);
+    this.createResourceCard(SHEEP_CARD_KEY, 220, 470);
+
+    this.createResourceCard(WHEAT_CARD_KEY, 200, 700);
+
+    this.createResourceCard(WOOD_CARD_KEY, 400, 200);
+
+    this.createResourceCard(ORE_CARD_KEY, 400, 450);
+
+    // this.add.image(200, 200, BRICK_CARD_KEY);
+    // this.add.image(200, 450, SHEEP_CARD_KEY);
+    // this.add.image(200, 700, WHEAT_CARD_KEY);
+    // this.add.image(400, 200, WOOD_CARD_KEY);
+    // this.add.image(400, 450, ORE_CARD_KEY);
   }
 
   update() {
@@ -119,6 +134,14 @@ export default class GameScene extends Phaser.Scene {
 
 
   // OTHER CLASS METHODS
+
+  createResourceCard(imageKey, x, y) {
+    let shadowOffset = { x: -7, y: 5 };
+    let brickShadow = this.add.image(x + shadowOffset.x, y + shadowOffset.y, imageKey);
+    brickShadow.tint = 0x000000;
+    brickShadow.alpha = 0.6;
+    this.add.image(x, y, imageKey);
+  }
 
   createRedoBoardButton() {
     this.redoBoardButton = this.add.text(50, 50, 'Redo Board', { fontSize: '32px', fill: '#000' });
