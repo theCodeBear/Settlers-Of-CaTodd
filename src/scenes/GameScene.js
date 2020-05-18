@@ -21,6 +21,7 @@ const TILE_Y_FULL_OFFSET = 150;
 export default class GameScene extends Phaser.Scene {
   constructor() {
     super('game-scene');
+    this.redoBoardButon;
     this.boardTileData = [];
     this.tileContainers = [];
     this.resources = [
@@ -68,15 +69,9 @@ export default class GameScene extends Phaser.Scene {
 
   create() {
     this.cameras.main.setBackgroundColor('#37d');
-    this.boardTileData = this.createBoardPositions();
-    console.log('board:', this.boardTileData);
-    let tiles = this.createAllTiles();
-    console.log('tiles:', tiles);
-    this.drawBoard();
-
-    // let graphics = this.add.graphics();
-    // graphics.fillStyle(0xffffff, 1);
-    // graphics.fillCircle(0, 0, 40);
+    this.makeGameBoard();
+    this.createRedoBoard
+    this.createRedoBoardButton();
   }
 
   update() {
@@ -84,6 +79,36 @@ export default class GameScene extends Phaser.Scene {
 
 
   // OTHER CLASS METHODS
+
+  createRedoBoardButton() {
+    this.redoBoardButton = this.add.text(50, 50, 'Redo Board', { fontSize: '32px', fill: '#000' });
+    this.redoBoardButton
+      .setInteractive()
+      .on('pointerover', () => this.redoBoardButtonHoverState())
+      .on('pointerout', () => this.redoBoardButtonRestState())
+      .on('pointerdown', () => {
+        console.log('clicked redo');
+        this.makeGameBoard();
+      });
+  }
+
+  redoBoardButtonHoverState() {
+    this.redoBoardButton.setStyle({ fill: '#ff8c00' });
+    document.body.style.cursor = 'pointer';
+  }
+
+  redoBoardButtonRestState() {
+    this.redoBoardButton.setStyle({ fill: '#000' });
+    document.body.style.cursor = 'default';
+  }
+
+  makeGameBoard() {
+    this.boardTileData = this.createBoardPositions();
+    console.log('board:', this.boardTileData);
+    let tiles = this.createAllTiles();
+    console.log('tiles:', tiles);
+    this.drawBoard();
+  }
 
   createBoardPositions() {
     // starts on left middle tile at 0,0. Only x and y are final values.
