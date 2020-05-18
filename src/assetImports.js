@@ -7,11 +7,22 @@ import ore from 'url:../public/img/Catan_ore.png';
 import sheep from 'url:../public/img/Catan_sheep.png';
 import wheat from 'url:../public/img/Catan_wheat.png';
 
+import brickCard from 'url:../public/img/brickCard.png';
+import sheepCard from 'url:../public/img/sheepCard.png';
+import wheatCard from 'url:../public/img/wheatCard.png';
+import woodCard from 'url:../public/img/woodCard.png';
+import oreCard from 'url:../public/img/oreCard.png';
+
 export default {
     brick,
     desert,
     forest,
     ore,
     sheep,
-    wheat
+    wheat,
+    brickCard,
+    sheepCard,
+    wheatCard,
+    woodCard,
+    oreCard
 };

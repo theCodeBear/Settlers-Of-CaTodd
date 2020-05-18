@@ -4,8 +4,8 @@ import GameScene from './scenes/GameScene';
 
 const config = {
   type: Phaser.AUTO,
-  width: 1000,
-  height: 1000,
+  width: 1400,
+  height: 920,
   scene: [GameScene]
 };
 

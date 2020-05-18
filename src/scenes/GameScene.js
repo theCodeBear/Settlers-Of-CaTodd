@@ -9,10 +9,22 @@ const SHEEP_KEY = 'sheep';
 const WHEAT_KEY = 'wheat';
 const ORE_KEY = 'ore';
 
+const BRICK_CARD_KEY = 'brickCard';
+const SHEEP_CARD_KEY = 'sheepCard';
+const WHEAT_CARD_KEY = 'wheatCard';
+const WOOD_CARD_KEY = 'woodCard';
+const ORE_CARD_KEY = 'oreCard';
+
+const KNIGHT_KEY = 'knight';
+const VICTORY_POINT_KEY = 'victoryPoint';
+const MONOPOLY_KEY = 'monopoly';
+const ROAD_BUILDING_KEY = 'roadBuilding';
+const YEAR_OF_PLENTY_KEY = 'yearOfPlenty';
+
 const TILES_IN_GAME = 19;
 const DESERT_CANT_BE_ROLLED = 0;
 
-const BOARD_MIDDLELEFT_X_COORD = 200;
+const BOARD_MIDDLELEFT_X_COORD = 600;
 const BOARD_MIDDLELEFT_Y_COORD = 500;
 const TILE_X_FULL_OFFSET = 173;
 const TILE_Y_FULL_OFFSET = 150;
@@ -56,6 +68,20 @@ export default class GameScene extends Phaser.Scene {
       '11': 2,
       '12': 1
     }
+    this.resourceCards = {
+      [ORE_KEY]: 19,
+      [BRICK_KEY]: 19,
+      [SHEEP_KEY]: 19,
+      [WHEAT_KEY]: 19,
+      [FOREST_KEY]: 19
+    };
+    this.developmentCards = {
+      [KNIGHT_KEY]: 14,
+      [MONOPOLY_KEY]: 2,
+      [ROAD_BUILDING_KEY]: 2,
+      [YEAR_OF_PLENTY_KEY]: 2,
+      [VICTORY_POINT_KEY]: 5
+    };
   }
 
   preload() {
@@ -65,6 +91,12 @@ export default class GameScene extends Phaser.Scene {
     this.load.image(BRICK_KEY, images.brick);
     this.load.image(WHEAT_KEY, images.wheat);
     this.load.image(ORE_KEY, images.ore);
+
+    this.load.image(BRICK_CARD_KEY, images.brickCard);
+    this.load.image(SHEEP_CARD_KEY, images.sheepCard);
+    this.load.image(WHEAT_CARD_KEY, images.wheatCard);
+    this.load.image(WOOD_CARD_KEY, images.woodCard);
+    this.load.image(ORE_CARD_KEY, images.oreCard);
   }
 
   create() {
@@ -72,6 +104,14 @@ export default class GameScene extends Phaser.Scene {
     this.makeGameBoard();
     this.createRedoBoard
     this.createRedoBoardButton();
+    console.log('resource cards', this.resourceCards);
+    console.log('dev cards', this.developmentCards);
+
+    this.add.image(200, 200, BRICK_CARD_KEY);
+    this.add.image(200, 450, SHEEP_CARD_KEY);
+    this.add.image(200, 700, WHEAT_CARD_KEY);
+    this.add.image(400, 200, WOOD_CARD_KEY);
+    this.add.image(400, 450, ORE_CARD_KEY);
   }
 
   update() {
