@@ -1,10 +1,10 @@
 import Phaser from 'phaser';
 
-const WOOD_KEY = 'wood';
-const BRICK_KEY = 'brick';
-const SHEEP_KEY = 'sheep';
-const WHEAT_KEY = 'wheat';
-const ORE_KEY = 'ore';
+const BRICK_CARD_KEY = 'brickCard';
+const SHEEP_CARD_KEY = 'sheepCard';
+const WHEAT_CARD_KEY = 'wheatCard';
+const WOOD_CARD_KEY = 'woodCard';
+const ORE_CARD_KEY = 'oreCard';
 
 const KNIGHT_KEY = 'knight';
 const VICTORY_POINT_KEY = 'victoryPoint';
@@ -14,14 +14,17 @@ const YEAR_OF_PLENTY_KEY = 'yearOfPlenty';
 
 
 export default class Player {
-  constructor() {
+  constructor(scene, playerDeck) {
+    this.scene = scene;
+    this.playerDeck = playerDeck;
+
     this.points = 0;
 
-    this.brick = 0;
-    this.sheep = 0;
-    this.wheat = 0;
-    this.wood = 0;
-    this.ore = 0;
+    this[BRICK_CARD_KEY] = 0;
+    this[SHEEP_CARD_KEY] = 0;
+    this[WHEAT_CARD_KEY] = 0;
+    this[WOOD_CARD_KEY] = 0;
+    this[ORE_CARD_KEY] = 0;
 
     this.knight = 0;
     this.monopoly = 0;
@@ -45,7 +48,7 @@ export default class Player {
   }
 
   get resourceCardsNum() {
-    return this.bricks + this.sheep + this.wheat + this.wood + this.ore;
+    return this[BRICK_CARD_KEY] + this[SHEEP_CARD_KEY] + this[WHEAT_CARD_KEY] + this[WOOD_CARD_KEY] + this[ORE_CARD_KEY];
   }
 
   get developmentCardsNum() {
@@ -66,8 +69,9 @@ export default class Player {
     return this.points;
   }
 
-  addResourceCard(resource) {
-    this[resource] += 1;
+  addResourceCard(resourceCardKey) {
+    this[resourceCardKey] += 1;
+    this.playerDeck.createResourceCard(this.scene, resourceCardKey, this[resourceCardKey]);
   }
 
   removeResourceCard(resource) {

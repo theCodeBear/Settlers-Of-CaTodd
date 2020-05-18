@@ -1,5 +1,7 @@
 import Phaser from 'phaser';
 import images from '../assetImports';
+import Player from '../Player';
+import PlayerDeck from '../ui/PlayerDeck';
 
 
 const WOOD_KEY = 'wood';
@@ -34,6 +36,8 @@ export default class GameScene extends Phaser.Scene {
   constructor() {
     super('game-scene');
     this.redoBoardButon;
+    this.player;
+    this.playerDeck;
     this.boardTileData = [];
     this.tileContainers = [];
     this.resources = [
@@ -107,26 +111,19 @@ export default class GameScene extends Phaser.Scene {
     console.log('resource cards', this.resourceCards);
     console.log('dev cards', this.developmentCards);
 
+    this.playerDeck = new PlayerDeck(this);
+    this.player = new Player(this, this.playerDeck);
 
-    this.createResourceCard(BRICK_CARD_KEY, 200, 200);
-    this.createResourceCard(BRICK_CARD_KEY, 210, 210);
-    this.createResourceCard(BRICK_CARD_KEY, 220, 220);
-
-    this.createResourceCard(SHEEP_CARD_KEY, 200, 450);
-    this.createResourceCard(SHEEP_CARD_KEY, 210, 460);
-    this.createResourceCard(SHEEP_CARD_KEY, 220, 470);
-
-    this.createResourceCard(WHEAT_CARD_KEY, 200, 700);
-
-    this.createResourceCard(WOOD_CARD_KEY, 400, 200);
-
-    this.createResourceCard(ORE_CARD_KEY, 400, 450);
-
-    // this.add.image(200, 200, BRICK_CARD_KEY);
-    // this.add.image(200, 450, SHEEP_CARD_KEY);
-    // this.add.image(200, 700, WHEAT_CARD_KEY);
-    // this.add.image(400, 200, WOOD_CARD_KEY);
-    // this.add.image(400, 450, ORE_CARD_KEY);
+    this.player.addResourceCard(BRICK_CARD_KEY);
+    this.player.addResourceCard(BRICK_CARD_KEY);
+    this.player.addResourceCard(BRICK_CARD_KEY);
+    this.player.addResourceCard(BRICK_CARD_KEY);
+    this.player.addResourceCard(BRICK_CARD_KEY);
+    this.player.addResourceCard(SHEEP_CARD_KEY);
+    this.player.addResourceCard(SHEEP_CARD_KEY);
+    // this.player.addResourceCard(WHEAT_CARD_KEY);
+    this.player.addResourceCard(WOOD_CARD_KEY);
+    // this.player.addResourceCard(ORE_CARD_KEY);
   }
 
   update() {
@@ -134,14 +131,6 @@ export default class GameScene extends Phaser.Scene {
 
 
   // OTHER CLASS METHODS
-
-  createResourceCard(imageKey, x, y) {
-    let shadowOffset = { x: -7, y: 5 };
-    let brickShadow = this.add.image(x + shadowOffset.x, y + shadowOffset.y, imageKey);
-    brickShadow.tint = 0x000000;
-    brickShadow.alpha = 0.6;
-    this.add.image(x, y, imageKey);
-  }
 
   createRedoBoardButton() {
     this.redoBoardButton = this.add.text(50, 50, 'Redo Board', { fontSize: '32px', fill: '#000' });
