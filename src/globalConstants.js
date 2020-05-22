@@ -36,6 +36,10 @@ const YEAR_OF_PLENTY = 'yearOfPlenty';
 
 const DEV_CARD = 'devCard';
 const EMPTY_DECK_ALPHA = 0.4;
+const IMAGE = 'image';
+const COLOR = 'color';
+const OCEAN = 'ocean';
+const BACKGROUND_COLOR = 'backgroundColor';
 
 
 export {
@@ -67,5 +71,9 @@ export {
   YEAR_OF_PLENTY,
 
   DEV_CARD,
-  EMPTY_DECK_ALPHA
+  EMPTY_DECK_ALPHA,
+  IMAGE,
+  COLOR,
+  OCEAN,
+  BACKGROUND_COLOR
 };

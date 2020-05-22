@@ -13,7 +13,7 @@ import {
   DESERT_TILE_COLOR, ORE_TILE_COLOR, BRICK_TILE_COLOR, SHEEP_TILE_COLOR, WHEAT_TILE_COLOR, WOOD_TILE_COLOR,
   ORE, BRICK, WOOD, WHEAT, SHEEP,
   KNIGHT, MONOPOLY, YEAR_OF_PLENTY, ROAD_BUILDING, VICTORY_POINT,
-  DEV_CARD
+  DEV_CARD, IMAGE, COLOR, OCEAN, BACKGROUND_COLOR
 } from '../globalConstants';
 
 
@@ -34,6 +34,9 @@ export default class GameScene extends Phaser.Scene {
     this.tileContainers = [];
     this.tileImageKeys = [];
     this.tileStyle;
+    this.backgroundColorImage;
+    this.backgroundOceanImage;
+    this.backgroundStyle = IMAGE;
     this.resourceNumbers = [
       2,
       3, 3,
@@ -103,12 +106,14 @@ export default class GameScene extends Phaser.Scene {
     this.load.image(VICTORY_POINT, images.victoryPointCard);
     // back of development card
     this.load.image(DEV_CARD, images.devCard)
-    this.load.image('ocean', images.ocean);
+    this.load.image(OCEAN, images.ocean);
+    this.load.image(BACKGROUND_COLOR, images.backgroundColor);
   }
 
   create() {
-    this.setBackground();
+    this.initBackground();
     this.switchTileStyles();
+    this.createBackgroundStyleToggle();
     this.makeGameBoard();
     this.createMenuButtons();
     console.log('resource cards', this.resourceCards);
@@ -265,8 +270,8 @@ export default class GameScene extends Phaser.Scene {
 
   // switch between color and image textures for tiles, update the tile data, redraw the game board
   switchTileStyles() {
-    if (!this.tileStyle || this.tileStyle === 'color') {
-      this.tileStyle = 'image';
+    if (!this.tileStyle || this.tileStyle === COLOR) {
+      this.tileStyle = IMAGE;
       this.tileImageKeys = [
         DESERT_TILE_IMG,
         ORE_TILE_IMG, ORE_TILE_IMG, ORE_TILE_IMG,
@@ -276,7 +281,7 @@ export default class GameScene extends Phaser.Scene {
         WOOD_TILE_IMG, WOOD_TILE_IMG, WOOD_TILE_IMG, WOOD_TILE_IMG,
       ];
     } else {
-      this.tileStyle = 'color';
+      this.tileStyle = COLOR;
       this.tileImageKeys = [
         DESERT_TILE_COLOR,
         ORE_TILE_COLOR, ORE_TILE_COLOR, ORE_TILE_COLOR,
@@ -290,13 +295,29 @@ export default class GameScene extends Phaser.Scene {
     this.drawBoard();
   }
 
-  setBackground() {
-    // this.cameras.main.setBackgroundColor('#37d');
-    let oceanBackground = this.add.image(this.cameras.main.width / 2, this.cameras.main.height / 2, 'ocean');
-    let scaleX = this.cameras.main.width / oceanBackground.width;
-    let scaleY = this.cameras.main.height / oceanBackground.height;
+  switchBackgroundStyles() {
+    if (this.backgroundStyle === COLOR) {
+      this.backgroundStyle = IMAGE;
+      this.backgroundOceanImage.visible = true;
+    } else {
+      this.backgroundStyle = COLOR;
+      this.backgroundOceanImage.visible = false;
+    }
+  }
+
+  // draw plain color and image texture backgrounds (image texture on top so it will display)
+  initBackground() {
+    this.backgroundColorImage = this.add.image(this.cameras.main.width / 2, this.cameras.main.height / 2, BACKGROUND_COLOR);
+    let scaleX = this.cameras.main.width / this.backgroundColorImage.width;
+    let scaleY = this.cameras.main.height / this.backgroundColorImage.height;
     let scale = Math.max(scaleX, scaleY);
-    oceanBackground.setScale(scale).setScrollFactor(0);
+    this.backgroundColorImage.setScale(scale).setScrollFactor(0);
+
+    this.backgroundOceanImage = this.add.image(this.cameras.main.width / 2, this.cameras.main.height / 2, OCEAN);
+    scaleX = this.cameras.main.width / this.backgroundOceanImage.width;
+    scaleY = this.cameras.main.height / this.backgroundOceanImage.height;
+    scale = Math.max(scaleX, scaleY);
+    this.backgroundOceanImage.setScale(scale).setScrollFactor(0);
   }
 
   createTileStyleToggle() {
@@ -308,6 +329,15 @@ export default class GameScene extends Phaser.Scene {
       .on('pointerdown', () => this.switchTileStyles());
   }
 
+  createBackgroundStyleToggle() {
+    this.backgroundStyleChanger = this.add.text(500, 0, 'Change Background Style', { fontSize: '32px', fill: '#000' });
+    this.backgroundStyleChanger
+      .setInteractive()
+      .on('pointerover', () => this.buttonHoverState(this.backgroundStyleChanger))
+      .on('pointerout', () => this.buttonRestState(this.backgroundStyleChanger))
+      .on('pointerdown', () => this.switchBackgroundStyles());
+  }
+
   createRedoBoardButton() {
     this.redoBoardButton = this.add.text(50, 50, 'Redo Board', { fontSize: '32px', fill: '#000' });
     this.redoBoardButton
@@ -315,7 +345,6 @@ export default class GameScene extends Phaser.Scene {
       .on('pointerover', () => this.buttonHoverState(this.redoBoardButton))
       .on('pointerout', () => this.buttonRestState(this.redoBoardButton))
       .on('pointerdown', () => {
-        console.log('clicked redo');
         this.makeGameBoard();
       });
   }
