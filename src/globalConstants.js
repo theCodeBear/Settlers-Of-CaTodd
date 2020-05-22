@@ -1,12 +1,21 @@
 
-// resource tile image keys
+// resource tile sprite image keys
 // - used in GameScene, 
-const WOOD_TILE = 'wood-tile';
-const DESERT_TILE = 'desert-tile';
-const BRICK_TILE = 'brick-tile';
-const SHEEP_TILE = 'sheep-tile';
-const WHEAT_TILE = 'wheat-tile';
-const ORE_TILE = 'ore-tile';
+const WOOD_TILE_IMG = 'wood-tile-img';
+const DESERT_TILE_IMG = 'desert-tile-img';
+const BRICK_TILE_IMG = 'brick-tile-img';
+const SHEEP_TILE_IMG = 'sheep-tile-img';
+const WHEAT_TILE_IMG = 'wheat-tile-img';
+const ORE_TILE_IMG = 'ore-tile-img';
+
+// resource tile sprite color keys
+// - used in GameScene,
+const WOOD_TILE_COLOR = 'wood-tile-color';
+const DESERT_TILE_COLOR = 'desert-tilcolor';
+const BRICK_TILE_COLOR = 'brick-tile-color';
+const SHEEP_TILE_COLOR = 'sheep-tile-color';
+const WHEAT_TILE_COLOR = 'wheat-tile-color';
+const ORE_TILE_COLOR = 'ore-tile-color';
 
 // resources for card image keys and card objects
 // - used in GameScene, Player, PlayerDeck, CardDeck
@@ -30,12 +39,19 @@ const EMPTY_DECK_ALPHA = 0.4;
 
 
 export {
-  WOOD_TILE,
-  DESERT_TILE,
-  BRICK_TILE,
-  SHEEP_TILE,
-  WHEAT_TILE,
-  ORE_TILE,
+  WOOD_TILE_IMG,
+  DESERT_TILE_IMG,
+  BRICK_TILE_IMG,
+  SHEEP_TILE_IMG,
+  WHEAT_TILE_IMG,
+  ORE_TILE_IMG,
+
+  WOOD_TILE_COLOR,
+  DESERT_TILE_COLOR,
+  BRICK_TILE_COLOR,
+  SHEEP_TILE_COLOR,
+  WHEAT_TILE_COLOR,
+  ORE_TILE_COLOR,
 
   WOOD,
   DESERT,

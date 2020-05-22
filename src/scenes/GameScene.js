@@ -4,7 +4,8 @@ import Player from '../Player';
 import PlayerDeck from '../ui/PlayerDeck';
 import CardDeck from '../CardDeck';
 import {
-  DESERT_TILE, ORE_TILE, BRICK_TILE, SHEEP_TILE, WHEAT_TILE, WOOD_TILE,
+  DESERT_TILE_IMG, ORE_TILE_IMG, BRICK_TILE_IMG, SHEEP_TILE_IMG, WHEAT_TILE_IMG, WOOD_TILE_IMG,
+  DESERT_TILE_COLOR, ORE_TILE_COLOR, BRICK_TILE_COLOR, SHEEP_TILE_COLOR, WHEAT_TILE_COLOR, WOOD_TILE_COLOR,
   ORE, BRICK, WOOD, WHEAT, SHEEP,
   KNIGHT, MONOPOLY, YEAR_OF_PLENTY, ROAD_BUILDING, VICTORY_POINT,
   DEV_CARD
@@ -23,21 +24,16 @@ const TILE_Y_FULL_OFFSET = 150;
 export default class GameScene extends Phaser.Scene {
   constructor() {
     super('game-scene');
-    this.redoBoardButon;
+    this.redoBoardButton;
+    this.tileStyleChanger;
     this.player;
     this.playerDeck;
     this.cardDeck;
     this.bankCardsUIContainer;
     this.boardTileData = [];
     this.tileContainers = [];
-    this.resourceTiles = [
-      DESERT_TILE,
-      ORE_TILE, ORE_TILE, ORE_TILE,
-      BRICK_TILE, BRICK_TILE, BRICK_TILE,
-      SHEEP_TILE, SHEEP_TILE, SHEEP_TILE, SHEEP_TILE,
-      WHEAT_TILE, WHEAT_TILE, WHEAT_TILE, WHEAT_TILE,
-      WOOD_TILE, WOOD_TILE, WOOD_TILE, WOOD_TILE,
-    ];
+    this.tileImageKeys = [];
+    this.tileStyle;
     this.resourceNumbers = [
       2,
       3, 3,
@@ -79,13 +75,20 @@ export default class GameScene extends Phaser.Scene {
   }
 
   preload() {
-    // resource tile images
-    this.load.image(WOOD_TILE, images.forest);
-    this.load.image(DESERT_TILE, images.desert);
-    this.load.image(SHEEP_TILE, images.sheep);
-    this.load.image(BRICK_TILE, images.brick);
-    this.load.image(WHEAT_TILE, images.wheat);
-    this.load.image(ORE_TILE, images.ore);
+    // resource tile image sprites
+    this.load.image(WOOD_TILE_IMG, images.woodTileImg);
+    this.load.image(DESERT_TILE_IMG, images.desertTileImg);
+    this.load.image(SHEEP_TILE_IMG, images.sheepTileImg);
+    this.load.image(BRICK_TILE_IMG, images.brickTileImg);
+    this.load.image(WHEAT_TILE_IMG, images.wheatTileImg);
+    this.load.image(ORE_TILE_IMG, images.oreTileImg);
+    // resource tile color sprites
+    this.load.image(WOOD_TILE_COLOR, images.woodTileColor);
+    this.load.image(DESERT_TILE_COLOR, images.desertTileColor);
+    this.load.image(SHEEP_TILE_COLOR, images.sheepTileColor);
+    this.load.image(BRICK_TILE_COLOR, images.brickTileColor);
+    this.load.image(WHEAT_TILE_COLOR, images.wheatTileColor);
+    this.load.image(ORE_TILE_COLOR, images.oreTileColor);
     // resource card images
     this.load.image(BRICK, images.brickCard);
     this.load.image(SHEEP, images.sheepCard);
@@ -105,9 +108,9 @@ export default class GameScene extends Phaser.Scene {
 
   create() {
     this.setBackground();
+    this.switchTileStyles();
     this.makeGameBoard();
-    this.createRedoBoard
-    this.createRedoBoardButton();
+    this.createMenuButtons();
     console.log('resource cards', this.resourceCards);
     console.log('dev cards', this.developmentCards);
 
@@ -149,6 +152,38 @@ export default class GameScene extends Phaser.Scene {
     this.cardDeck.showBankUI(this);
   }
 
+  createMenuButtons() {
+    this.createRedoBoardButton();
+    this.createTileStyleToggle();
+  }
+
+  // switch between color and image textures for tiles, update the tile data, redraw the game board
+  switchTileStyles() {
+    if (!this.tileStyle || this.tileStyle === 'color') {
+      this.tileStyle = 'image';
+      this.tileImageKeys = [
+        DESERT_TILE_IMG,
+        ORE_TILE_IMG, ORE_TILE_IMG, ORE_TILE_IMG,
+        BRICK_TILE_IMG, BRICK_TILE_IMG, BRICK_TILE_IMG,
+        SHEEP_TILE_IMG, SHEEP_TILE_IMG, SHEEP_TILE_IMG, SHEEP_TILE_IMG,
+        WHEAT_TILE_IMG, WHEAT_TILE_IMG, WHEAT_TILE_IMG, WHEAT_TILE_IMG,
+        WOOD_TILE_IMG, WOOD_TILE_IMG, WOOD_TILE_IMG, WOOD_TILE_IMG,
+      ];
+    } else {
+      this.tileStyle = 'color';
+      this.tileImageKeys = [
+        DESERT_TILE_COLOR,
+        ORE_TILE_COLOR, ORE_TILE_COLOR, ORE_TILE_COLOR,
+        BRICK_TILE_COLOR, BRICK_TILE_COLOR, BRICK_TILE_COLOR,
+        SHEEP_TILE_COLOR, SHEEP_TILE_COLOR, SHEEP_TILE_COLOR, SHEEP_TILE_COLOR,
+        WHEAT_TILE_COLOR, WHEAT_TILE_COLOR, WHEAT_TILE_COLOR, WHEAT_TILE_COLOR,
+        WOOD_TILE_COLOR, WOOD_TILE_COLOR, WOOD_TILE_COLOR, WOOD_TILE_COLOR,
+      ];
+    }
+    this.boardTileData = this.boardTileData.map(tile => this.setOneTileData(tile, tile.coordX, tile.coordY, tile.imageKeyIndex, tile.number));
+    this.drawBoard();
+  }
+
   setBackground() {
     // this.cameras.main.setBackgroundColor('#37d');
     let oceanBackground = this.add.image(this.cameras.main.width / 2, this.cameras.main.height / 2, 'ocean');
@@ -158,25 +193,34 @@ export default class GameScene extends Phaser.Scene {
     oceanBackground.setScale(scale).setScrollFactor(0);
   }
 
+  createTileStyleToggle() {
+    this.tileStyleChanger = this.add.text(50, 0, 'Change Tile Style', { fontSize: '32px', fill: '#000' });
+    this.tileStyleChanger
+      .setInteractive()
+      .on('pointerover', () => this.buttonHoverState(this.tileStyleChanger))
+      .on('pointerout', () => this.buttonRestState(this.tileStyleChanger))
+      .on('pointerdown', () => this.switchTileStyles());
+  }
+
   createRedoBoardButton() {
     this.redoBoardButton = this.add.text(50, 50, 'Redo Board', { fontSize: '32px', fill: '#000' });
     this.redoBoardButton
       .setInteractive()
-      .on('pointerover', () => this.redoBoardButtonHoverState())
-      .on('pointerout', () => this.redoBoardButtonRestState())
+      .on('pointerover', () => this.buttonHoverState(this.redoBoardButton))
+      .on('pointerout', () => this.buttonRestState(this.redoBoardButton))
       .on('pointerdown', () => {
         console.log('clicked redo');
         this.makeGameBoard();
       });
   }
 
-  redoBoardButtonHoverState() {
-    this.redoBoardButton.setStyle({ fill: '#ff8c00' });
+  buttonHoverState(button) {
+    button.setStyle({ fill: '#ff8c00' });
     document.body.style.cursor = 'pointer';
   }
 
-  redoBoardButtonRestState() {
-    this.redoBoardButton.setStyle({ fill: '#000' });
+  buttonRestState(button) {
+    button.setStyle({ fill: '#000' });
     document.body.style.cursor = 'default';
   }
 
@@ -191,38 +235,40 @@ export default class GameScene extends Phaser.Scene {
   createBoardPositions() {
     // starts on left middle tile at 0,0. Only x and y are final values.
     let board = [
-      { coordX: 0, coordY: 0, x: 0, y: 0, resource: '', number: 0 },
-      { coordX: 0, coordY: 0, x: 1, y: 0, resource: '', number: 0 },
-      { coordX: 0, coordY: 0, x: 2, y: 0, resource: '', number: 0 },
-      { coordX: 0, coordY: 0, x: 3, y: 0, resource: '', number: 0 },
-      { coordX: 0, coordY: 0, x: 4, y: 0, resource: '', number: 0 },
-      { coordX: 0, coordY: 0, x: 0, y: -1, resource: '', number: 0 },
-      { coordX: 0, coordY: 0, x: 1, y: -1, resource: '', number: 0 },
-      { coordX: 0, coordY: 0, x: 2, y: -1, resource: '', number: 0 },
-      { coordX: 0, coordY: 0, x: 3, y: -1, resource: '', number: 0 },
-      { coordX: 0, coordY: 0, x: 0, y: -2, resource: '', number: 0 },
-      { coordX: 0, coordY: 0, x: 1, y: -2, resource: '', number: 0 },
-      { coordX: 0, coordY: 0, x: 2, y: -2, resource: '', number: 0 },
-      { coordX: 0, coordY: 0, x: 0, y: 1, resource: '', number: 0 },
-      { coordX: 0, coordY: 0, x: 1, y: 1, resource: '', number: 0 },
-      { coordX: 0, coordY: 0, x: 2, y: 1, resource: '', number: 0 },
-      { coordX: 0, coordY: 0, x: 3, y: 1, resource: '', number: 0 },
-      { coordX: 0, coordY: 0, x: 0, y: 2, resource: '', number: 0 },
-      { coordX: 0, coordY: 0, x: 1, y: 2, resource: '', number: 0 },
-      { coordX: 0, coordY: 0, x: 2, y: 2, resource: '', number: 0 }
+      { coordX: 0, coordY: 0, x: 0, y: 0, imageKeyIndex: 0, number: 0 },
+      { coordX: 0, coordY: 0, x: 1, y: 0, imageKeyIndex: 0, number: 0 },
+      { coordX: 0, coordY: 0, x: 2, y: 0, imageKeyIndex: 0, number: 0 },
+      { coordX: 0, coordY: 0, x: 3, y: 0, imageKeyIndex: 0, number: 0 },
+      { coordX: 0, coordY: 0, x: 4, y: 0, imageKeyIndex: 0, number: 0 },
+      { coordX: 0, coordY: 0, x: 0, y: -1, imageKeyIndex: 0, number: 0 },
+      { coordX: 0, coordY: 0, x: 1, y: -1, imageKeyIndex: 0, number: 0 },
+      { coordX: 0, coordY: 0, x: 2, y: -1, imageKeyIndex: 0, number: 0 },
+      { coordX: 0, coordY: 0, x: 3, y: -1, imageKeyIndex: 0, number: 0 },
+      { coordX: 0, coordY: 0, x: 0, y: -2, imageKeyIndex: 0, number: 0 },
+      { coordX: 0, coordY: 0, x: 1, y: -2, imageKeyIndex: 0, number: 0 },
+      { coordX: 0, coordY: 0, x: 2, y: -2, imageKeyIndex: 0, number: 0 },
+      { coordX: 0, coordY: 0, x: 0, y: 1, imageKeyIndex: 0, number: 0 },
+      { coordX: 0, coordY: 0, x: 1, y: 1, imageKeyIndex: 0, number: 0 },
+      { coordX: 0, coordY: 0, x: 2, y: 1, imageKeyIndex: 0, number: 0 },
+      { coordX: 0, coordY: 0, x: 3, y: 1, imageKeyIndex: 0, number: 0 },
+      { coordX: 0, coordY: 0, x: 0, y: 2, imageKeyIndex: 0, number: 0 },
+      { coordX: 0, coordY: 0, x: 1, y: 2, imageKeyIndex: 0, number: 0 },
+      { coordX: 0, coordY: 0, x: 2, y: 2, imageKeyIndex: 0, number: 0 }
     ];
     return board;
   }
 
   drawBoard() {
+    let tileImageKey;
     this.boardTileData.forEach((tile, i) => {
       this.tileContainers = this.tileContainers.concat(this.add.container(tile.coordX, tile.coordY));
-      let tileImage = this.add.image(0, 0, tile.resource);
+      tileImageKey = this.tileImageKeys[tile.imageKeyIndex];
+      let tileImage = this.add.image(0, 0, tileImageKey);
       this.tileContainers[i].add(tileImage);
 
       let graphics = this.add.graphics();
 
-      if (tile.resource !== DESERT_TILE) {
+      if (tileImageKey !== DESERT_TILE_IMG && tileImageKey !== DESERT_TILE_COLOR) {
         graphics.fillStyle(0x000000, 0.9);
         graphics.fillCircle(0, 0, 35);
         this.addResourceNumbersToGraphicTiles(graphics, tile, i);
@@ -253,32 +299,30 @@ export default class GameScene extends Phaser.Scene {
   }
 
   // custom class methods...
+
   createAllTiles() {
     let tiles = [];
-    let resources = this.resourceTiles.slice();
+    let tileImageKeyIndices = randomizeArray([...Array(19).keys()]);
     let resourceNumbers = this.resourceNumbers.slice();
     let resourcesLeft = TILES_IN_GAME;
 
-    this.boardTileData.forEach(tile => {
-      let resourceIndex = pickRandomTile(resourcesLeft);
-      let resourceNumbersIndex = pickRandomTile(resourcesLeft - 1); // minus 1 because there is no desert resource number
+    this.boardTileData.forEach((tile, i) => {
+      let resourceNumbersIndex = pickRandomIndex(resourcesLeft - 1); // minus 1 because there is no desert resource number
 
       let { coordX, coordY } = calculateTilePixelCoords(tile.x, tile.y);
 
-      if (resources[resourceIndex] === DESERT_TILE)
+      // if desert tile key was chosen, set dice numbers index to null
+      if (this.tileImageKeys[tileImageKeyIndices[i]] === DESERT_TILE_IMG || this.tileImageKeys[tileImageKeyIndices[i]] === DESERT_TILE_COLOR)
         resourceNumbersIndex = null;
+      // set dice number to randomly chosen number or 0 (which won't be displayed) if desert tile was chosen
+      const number = resourceNumbers[resourceNumbersIndex] || DESERT_CANT_BE_ROLLED;
 
       tiles = tiles.concat(
-        Object.assign(tile, {
-          coordX,
-          coordY,
-          resource: resources[resourceIndex],
-          number: resourceNumbers[resourceNumbersIndex] || DESERT_CANT_BE_ROLLED
-        })
+        this.setOneTileData(tile, coordX, coordY, tileImageKeyIndices[i], number)
       );
 
+      // if desert wasn't chosen remove dice number from local dice numbers array
       const desertWasntChosen = resourceNumbersIndex !== null;
-      resources.splice(resourceIndex, 1);
       if (desertWasntChosen)
         resourceNumbers.splice(resourceNumbersIndex, 1);
 
@@ -286,6 +330,15 @@ export default class GameScene extends Phaser.Scene {
     });
 
     return tiles;
+  }
+
+  setOneTileData(tileDataObj, coordX, coordY, imageKeyIndex, number) {
+    return Object.assign(tileDataObj, {
+      coordX,
+      coordY,
+      imageKeyIndex,
+      number
+    });
   }
 
 }
@@ -302,6 +355,19 @@ function calculateTilePixelCoords(tileXPosition, tileYPosition) {
   return { coordX, coordY };
 }
 
-function pickRandomTile(totalTiles) {
-  return Math.floor(Math.random() * totalTiles);
+function pickRandomIndex(length) {
+  return Math.floor(Math.random() * length);
+}
+
+function randomizeArray(array) {
+  let j;
+  let temp;
+  let a = array.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    j = Math.floor(Math.random() * i);
+    temp = a[i];
+    a[i] = a[j];
+    a[j] = temp;
+  }
+  return a;
 }
