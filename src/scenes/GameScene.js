@@ -4,6 +4,11 @@ import Player from '../Player';
 import PlayerDeck from '../ui/PlayerDeck';
 import CardDeck from '../CardDeck';
 import {
+  calculateTilePixelCoords,
+  pickRandomIndex,
+  randomizeArray
+} from '../utils';
+import {
   DESERT_TILE_IMG, ORE_TILE_IMG, BRICK_TILE_IMG, SHEEP_TILE_IMG, WHEAT_TILE_IMG, WOOD_TILE_IMG,
   DESERT_TILE_COLOR, ORE_TILE_COLOR, BRICK_TILE_COLOR, SHEEP_TILE_COLOR, WHEAT_TILE_COLOR, WOOD_TILE_COLOR,
   ORE, BRICK, WOOD, WHEAT, SHEEP,
@@ -14,11 +19,6 @@ import {
 
 const TILES_IN_GAME = 19;
 const DESERT_CANT_BE_ROLLED = 0;
-
-const BOARD_MIDDLELEFT_X_COORD = 650;
-const BOARD_MIDDLELEFT_Y_COORD = 450;
-const TILE_X_FULL_OFFSET = 173;
-const TILE_Y_FULL_OFFSET = 150;
 
 
 export default class GameScene extends Phaser.Scene {
@@ -148,6 +148,112 @@ export default class GameScene extends Phaser.Scene {
 
   // OTHER CLASS METHODS
 
+  makeGameBoard() {
+    this.boardTileData = this.createBoardPositions();
+    console.log('board:', this.boardTileData);
+    let tiles = this.createAllTiles();
+    console.log('tiles:', tiles);
+    this.drawBoard();
+  }
+
+  createBoardPositions() {
+    // starts on left middle tile at 0,0. Only x and y are final values.
+    let board = [
+      { coordX: 0, coordY: 0, x: 0, y: 0, imageKeyIndex: 0, number: 0 },
+      { coordX: 0, coordY: 0, x: 1, y: 0, imageKeyIndex: 0, number: 0 },
+      { coordX: 0, coordY: 0, x: 2, y: 0, imageKeyIndex: 0, number: 0 },
+      { coordX: 0, coordY: 0, x: 3, y: 0, imageKeyIndex: 0, number: 0 },
+      { coordX: 0, coordY: 0, x: 4, y: 0, imageKeyIndex: 0, number: 0 },
+      { coordX: 0, coordY: 0, x: 0, y: -1, imageKeyIndex: 0, number: 0 },
+      { coordX: 0, coordY: 0, x: 1, y: -1, imageKeyIndex: 0, number: 0 },
+      { coordX: 0, coordY: 0, x: 2, y: -1, imageKeyIndex: 0, number: 0 },
+      { coordX: 0, coordY: 0, x: 3, y: -1, imageKeyIndex: 0, number: 0 },
+      { coordX: 0, coordY: 0, x: 0, y: -2, imageKeyIndex: 0, number: 0 },
+      { coordX: 0, coordY: 0, x: 1, y: -2, imageKeyIndex: 0, number: 0 },
+      { coordX: 0, coordY: 0, x: 2, y: -2, imageKeyIndex: 0, number: 0 },
+      { coordX: 0, coordY: 0, x: 0, y: 1, imageKeyIndex: 0, number: 0 },
+      { coordX: 0, coordY: 0, x: 1, y: 1, imageKeyIndex: 0, number: 0 },
+      { coordX: 0, coordY: 0, x: 2, y: 1, imageKeyIndex: 0, number: 0 },
+      { coordX: 0, coordY: 0, x: 3, y: 1, imageKeyIndex: 0, number: 0 },
+      { coordX: 0, coordY: 0, x: 0, y: 2, imageKeyIndex: 0, number: 0 },
+      { coordX: 0, coordY: 0, x: 1, y: 2, imageKeyIndex: 0, number: 0 },
+      { coordX: 0, coordY: 0, x: 2, y: 2, imageKeyIndex: 0, number: 0 }
+    ];
+    return board;
+  }
+
+  createAllTiles() {
+    let tiles = [];
+    let tileImageKeyIndices = randomizeArray([...Array(19).keys()]);
+    let resourceNumbers = this.resourceNumbers.slice();
+    let resourcesLeft = TILES_IN_GAME;
+
+    this.boardTileData.forEach((tile, i) => {
+      let resourceNumbersIndex = pickRandomIndex(resourcesLeft - 1); // minus 1 because there is no desert resource number
+
+      let { coordX, coordY } = calculateTilePixelCoords(tile.x, tile.y);
+
+      // if desert tile key was chosen, set dice numbers index to null
+      if (this.tileImageKeys[tileImageKeyIndices[i]] === DESERT_TILE_IMG || this.tileImageKeys[tileImageKeyIndices[i]] === DESERT_TILE_COLOR)
+        resourceNumbersIndex = null;
+      // set dice number to randomly chosen number or 0 (which won't be displayed) if desert tile was chosen
+      const number = resourceNumbers[resourceNumbersIndex] || DESERT_CANT_BE_ROLLED;
+
+      tiles = tiles.concat(
+        this.setOneTileData(tile, coordX, coordY, tileImageKeyIndices[i], number)
+      );
+
+      // if desert wasn't chosen remove dice number from local dice numbers array
+      const desertWasntChosen = resourceNumbersIndex !== null;
+      if (desertWasntChosen)
+        resourceNumbers.splice(resourceNumbersIndex, 1);
+
+      resourcesLeft--;
+    });
+
+    return tiles;
+  }
+
+  drawBoard() {
+    let tileImageKey;
+    this.boardTileData.forEach((tile, i) => {
+      this.tileContainers = this.tileContainers.concat(this.add.container(tile.coordX, tile.coordY));
+      tileImageKey = this.tileImageKeys[tile.imageKeyIndex];
+      let tileImage = this.add.image(0, 0, tileImageKey);
+      this.tileContainers[i].add(tileImage);
+
+      let graphics = this.add.graphics();
+
+      if (tileImageKey !== DESERT_TILE_IMG && tileImageKey !== DESERT_TILE_COLOR) {
+        graphics.fillStyle(0x000000, 0.9);
+        graphics.fillCircle(0, 0, 35);
+        this.addResourceNumbersToGraphicTiles(graphics, tile, i);
+      }
+    });
+  }
+
+  addResourceNumbersToGraphicTiles(graphics, tileData, index) {
+    const textStyle = { fontSize: '32px', color: tileData.number === 6 || tileData.number === 8 ? '#ff8c00' : '#fff' };
+    const resourceNumberText = this.add.text(0, 0, tileData.number, textStyle);
+    resourceNumberText.setOrigin(0.5, 0.5);
+
+    this.createNumberDots(graphics, tileData.number);
+
+    this.tileContainers[index].add(graphics);
+    this.tileContainers[index].add(resourceNumberText);
+  }
+
+  createNumberDots(graphics, resourceNumber) {
+    const numberOfDots = this.numberDots[resourceNumber];
+    let color, xOffset, yOffset = 20, radius = 2, alpha = 1.0;
+    for (let i = 0; i < numberOfDots; i++) {
+      color = resourceNumber === 6 || resourceNumber === 8 ? 0xff8c00 : 0x000000;
+      xOffset = (i * 6) - ((numberOfDots - 1) * 3);
+      graphics.fillStyle(color, alpha);
+      graphics.fillCircle(xOffset, yOffset, radius);
+    }
+  }
+
   manuallyUpdate() {
     this.cardDeck.showBankUI(this);
   }
@@ -224,114 +330,6 @@ export default class GameScene extends Phaser.Scene {
     document.body.style.cursor = 'default';
   }
 
-  makeGameBoard() {
-    this.boardTileData = this.createBoardPositions();
-    console.log('board:', this.boardTileData);
-    let tiles = this.createAllTiles();
-    console.log('tiles:', tiles);
-    this.drawBoard();
-  }
-
-  createBoardPositions() {
-    // starts on left middle tile at 0,0. Only x and y are final values.
-    let board = [
-      { coordX: 0, coordY: 0, x: 0, y: 0, imageKeyIndex: 0, number: 0 },
-      { coordX: 0, coordY: 0, x: 1, y: 0, imageKeyIndex: 0, number: 0 },
-      { coordX: 0, coordY: 0, x: 2, y: 0, imageKeyIndex: 0, number: 0 },
-      { coordX: 0, coordY: 0, x: 3, y: 0, imageKeyIndex: 0, number: 0 },
-      { coordX: 0, coordY: 0, x: 4, y: 0, imageKeyIndex: 0, number: 0 },
-      { coordX: 0, coordY: 0, x: 0, y: -1, imageKeyIndex: 0, number: 0 },
-      { coordX: 0, coordY: 0, x: 1, y: -1, imageKeyIndex: 0, number: 0 },
-      { coordX: 0, coordY: 0, x: 2, y: -1, imageKeyIndex: 0, number: 0 },
-      { coordX: 0, coordY: 0, x: 3, y: -1, imageKeyIndex: 0, number: 0 },
-      { coordX: 0, coordY: 0, x: 0, y: -2, imageKeyIndex: 0, number: 0 },
-      { coordX: 0, coordY: 0, x: 1, y: -2, imageKeyIndex: 0, number: 0 },
-      { coordX: 0, coordY: 0, x: 2, y: -2, imageKeyIndex: 0, number: 0 },
-      { coordX: 0, coordY: 0, x: 0, y: 1, imageKeyIndex: 0, number: 0 },
-      { coordX: 0, coordY: 0, x: 1, y: 1, imageKeyIndex: 0, number: 0 },
-      { coordX: 0, coordY: 0, x: 2, y: 1, imageKeyIndex: 0, number: 0 },
-      { coordX: 0, coordY: 0, x: 3, y: 1, imageKeyIndex: 0, number: 0 },
-      { coordX: 0, coordY: 0, x: 0, y: 2, imageKeyIndex: 0, number: 0 },
-      { coordX: 0, coordY: 0, x: 1, y: 2, imageKeyIndex: 0, number: 0 },
-      { coordX: 0, coordY: 0, x: 2, y: 2, imageKeyIndex: 0, number: 0 }
-    ];
-    return board;
-  }
-
-  drawBoard() {
-    let tileImageKey;
-    this.boardTileData.forEach((tile, i) => {
-      this.tileContainers = this.tileContainers.concat(this.add.container(tile.coordX, tile.coordY));
-      tileImageKey = this.tileImageKeys[tile.imageKeyIndex];
-      let tileImage = this.add.image(0, 0, tileImageKey);
-      this.tileContainers[i].add(tileImage);
-
-      let graphics = this.add.graphics();
-
-      if (tileImageKey !== DESERT_TILE_IMG && tileImageKey !== DESERT_TILE_COLOR) {
-        graphics.fillStyle(0x000000, 0.9);
-        graphics.fillCircle(0, 0, 35);
-        this.addResourceNumbersToGraphicTiles(graphics, tile, i);
-      }
-    });
-  }
-
-  addResourceNumbersToGraphicTiles(graphics, tileData, index) {
-    const textStyle = { fontSize: '32px', color: tileData.number === 6 || tileData.number === 8 ? '#ff8c00' : '#fff' };
-    const resourceNumberText = this.add.text(0, 0, tileData.number, textStyle);
-    resourceNumberText.setOrigin(0.5, 0.5);
-
-    this.createNumberDots(graphics, tileData.number);
-
-    this.tileContainers[index].add(graphics);
-    this.tileContainers[index].add(resourceNumberText);
-  }
-
-  createNumberDots(graphics, resourceNumber) {
-    const numberOfDots = this.numberDots[resourceNumber];
-    let color, xOffset, yOffset = 20, radius = 2, alpha = 1.0;
-    for (let i = 0; i < numberOfDots; i++) {
-      color = resourceNumber === 6 || resourceNumber === 8 ? 0xff8c00 : 0x000000;
-      xOffset = (i * 6) - ((numberOfDots - 1) * 3);
-      graphics.fillStyle(color, alpha);
-      graphics.fillCircle(xOffset, yOffset, radius);
-    }
-  }
-
-  // custom class methods...
-
-  createAllTiles() {
-    let tiles = [];
-    let tileImageKeyIndices = randomizeArray([...Array(19).keys()]);
-    let resourceNumbers = this.resourceNumbers.slice();
-    let resourcesLeft = TILES_IN_GAME;
-
-    this.boardTileData.forEach((tile, i) => {
-      let resourceNumbersIndex = pickRandomIndex(resourcesLeft - 1); // minus 1 because there is no desert resource number
-
-      let { coordX, coordY } = calculateTilePixelCoords(tile.x, tile.y);
-
-      // if desert tile key was chosen, set dice numbers index to null
-      if (this.tileImageKeys[tileImageKeyIndices[i]] === DESERT_TILE_IMG || this.tileImageKeys[tileImageKeyIndices[i]] === DESERT_TILE_COLOR)
-        resourceNumbersIndex = null;
-      // set dice number to randomly chosen number or 0 (which won't be displayed) if desert tile was chosen
-      const number = resourceNumbers[resourceNumbersIndex] || DESERT_CANT_BE_ROLLED;
-
-      tiles = tiles.concat(
-        this.setOneTileData(tile, coordX, coordY, tileImageKeyIndices[i], number)
-      );
-
-      // if desert wasn't chosen remove dice number from local dice numbers array
-      const desertWasntChosen = resourceNumbersIndex !== null;
-      if (desertWasntChosen)
-        resourceNumbers.splice(resourceNumbersIndex, 1);
-
-      resourcesLeft--;
-    });
-
-    return tiles;
-  }
-
   setOneTileData(tileDataObj, coordX, coordY, imageKeyIndex, number) {
     return Object.assign(tileDataObj, {
       coordX,
@@ -341,33 +339,4 @@ export default class GameScene extends Phaser.Scene {
     });
   }
 
-}
-
-
-// methods outside of class
-
-function calculateTilePixelCoords(tileXPosition, tileYPosition) {
-  const middleXOffset = TILE_X_FULL_OFFSET * tileXPosition;
-  const nonMiddleXOffset = (TILE_X_FULL_OFFSET * tileXPosition) + ((TILE_X_FULL_OFFSET / 2) * Math.abs(tileYPosition));
-  const tileXOffset = tileYPosition !== 0 ? nonMiddleXOffset : middleXOffset;
-  const coordX = BOARD_MIDDLELEFT_X_COORD + tileXOffset;
-  const coordY = BOARD_MIDDLELEFT_Y_COORD + (tileYPosition * TILE_Y_FULL_OFFSET);
-  return { coordX, coordY };
-}
-
-function pickRandomIndex(length) {
-  return Math.floor(Math.random() * length);
-}
-
-function randomizeArray(array) {
-  let j;
-  let temp;
-  let a = array.slice();
-  for (let i = a.length - 1; i > 0; i--) {
-    j = Math.floor(Math.random() * i);
-    temp = a[i];
-    a[i] = a[j];
-    a[j] = temp;
-  }
-  return a;
 }
