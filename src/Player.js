@@ -1,16 +1,5 @@
 import Phaser from 'phaser';
-
-const BRICK_CARD_KEY = 'brickCard';
-const SHEEP_CARD_KEY = 'sheepCard';
-const WHEAT_CARD_KEY = 'wheatCard';
-const WOOD_CARD_KEY = 'woodCard';
-const ORE_CARD_KEY = 'oreCard';
-
-const KNIGHT_KEY = 'knight';
-const VICTORY_POINT_KEY = 'victoryPoint';
-const MONOPOLY_KEY = 'monopoly';
-const ROAD_BUILDING_KEY = 'roadBuilding';
-const YEAR_OF_PLENTY_KEY = 'yearOfPlenty';
+import { BRICK, SHEEP, WHEAT, WOOD, ORE, KNIGHT, MONOPOLY, YEAR_OF_PLENTY, ROAD_BUILDING, VICTORY_POINT } from './globalConstants';
 
 
 export default class Player {
@@ -20,17 +9,19 @@ export default class Player {
 
     this.points = 0;
 
-    this[BRICK_CARD_KEY] = 0;
-    this[SHEEP_CARD_KEY] = 0;
-    this[WHEAT_CARD_KEY] = 0;
-    this[WOOD_CARD_KEY] = 0;
-    this[ORE_CARD_KEY] = 0;
+    // resource cards
+    this[BRICK] = 0;
+    this[SHEEP] = 0;
+    this[WHEAT] = 0;
+    this[WOOD] = 0;
+    this[ORE] = 0;
 
-    this.knight = 0;
-    this.monopoly = 0;
-    this.yearOfPlenty = 0;
-    this.roadBuilding = 0;
-    this.victoryPoint = 0;
+    // dev cards
+    this[KNIGHT] = 0;
+    this[MONOPOLY] = 0;
+    this[YEAR_OF_PLENTY] = 0;
+    this[ROAD_BUILDING] = 0;
+    this[VICTORY_POINT] = 0;
 
     this.knightsPlayed = 0;
 
@@ -48,11 +39,11 @@ export default class Player {
   }
 
   get resourceCardsNum() {
-    return this[BRICK_CARD_KEY] + this[SHEEP_CARD_KEY] + this[WHEAT_CARD_KEY] + this[WOOD_CARD_KEY] + this[ORE_CARD_KEY];
+    return this[BRICK] + this[SHEEP] + this[WHEAT] + this[WOOD] + this[ORE];
   }
 
   get developmentCardsNum() {
-    return this.knights + this.monopoly + this.yearOfPlenty + this.roadBuilding + this.victoryPoints;
+    return this[KNIGHT] + this[MONOPOLY] + this[YEAR_OF_PLENTY] + this[ROAD_BUILDING] + this[VICTORY_POINT];
   }
 
   getKnightsPlayed() {
@@ -61,7 +52,7 @@ export default class Player {
 
   // display for opponents
   get publicPointsDisplay() {
-    return this.points - this.victoryPoint;
+    return this.points - this[VICTORY_POINT];
   }
 
   // display for this player
@@ -87,41 +78,41 @@ export default class Player {
 
   useDevelopmentCard(devCard, gameCardDeck) {
     this[devCard] -= 1;
-    if (devCard === KNIGHT_KEY) this.playKnightCard();
-    if (devCard === MONOPOLY_KEY) this.playMonopolyCard();
-    if (devCard === YEAR_OF_PLENTY_KEY) this.playYearOfPlentyCard();
-    if (devCard === ROAD_BUILDING_KEY) this.playRoadBuildingCard();
+    if (devCard === KNIGHT) this.playKnightCard();
+    if (devCard === MONOPOLY) this.playMonopolyCard();
+    if (devCard === YEAR_OF_PLENTY) this.playYearOfPlentyCard();
+    if (devCard === ROAD_BUILDING) this.playRoadBuildingCard();
   }
 
   playKnightCard() {
     if (this.knight === 0) return;
     this.knightsPlayed += 1;
-    this.removeResourceCard(KNIGHT_KEY);
+    this.removeResourceCard(KNIGHT);
     // knight logic??
   }
 
   playMonopolyCard() {
     if (this.monopoly === 0) return;
-    this.removeResourceCard(MONOPOLY_KEY);
+    this.removeResourceCard(MONOPOLY);
     // monopoly logic??
   }
 
   playYearOfPlentyCard() {
     if (this.yearOfPlenty === 0) return;
-    this.removeResourceCard(YEAR_OF_PLENTY_KEY);
+    this.removeResourceCard(YEAR_OF_PLENTY);
     // year of plenty logic??
   }
 
   playRoadBuildingCard() {
     if (this.roadBuilding === 0) return;
-    this.removeResourceCard(ROAD_BUILDING_KEY);
+    this.removeResourceCard(ROAD_BUILDING);
     // road building logic??
   }
 
   // playVictoryPointCard() {
-  //   if (this.knight === 0) return;
+  //   if (this[KNIGHT] === 0) return;
   //   this.knightsPlayed += 1;
-  //   this.removeResourceCard(KNIGHT_KEY);
+  //   this.removeResourceCard(KNIGHT);
   //   // victory point logic??
   // }
 

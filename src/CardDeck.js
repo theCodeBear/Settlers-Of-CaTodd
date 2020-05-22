@@ -1,58 +1,58 @@
-
+import { BRICK, SHEEP, WHEAT, WOOD, ORE, KNIGHT, MONOPOLY, YEAR_OF_PLENTY, ROAD_BUILDING, VICTORY_POINT } from './globalConstants';
 
 export default class CardDeck {
   constructor() {
-    this.wood = 19;
-    this.brick = 19;
-    this.sheep = 19;
-    this.wheat = 19;
-    this.ore = 19;
+    this[WOOD] = 19;
+    this[BRICK] = 19;
+    this[SHEEP] = 19;
+    this[WHEAT] = 19;
+    this[ORE] = 19;
 
-    this.knights = 14;
-    this.victoryPoints = 5;
-    this.monopoly = 2;
-    this.roadBuilding = 2;
-    this.yearOfPlenty = 2;
+    this[KNIGHT] = 14;
+    this[VICTORY_POINT] = 5;
+    this[MONOPOLY] = 2;
+    this[ROAD_BUILDING] = 2;
+    this[YEAR_OF_PLENTY] = 2;
   }
 
   howManyWood() {
-    return this.wood;
+    return this[WOOD];
   }
 
   howManyBrick() {
-    return this.wood;
+    return this[BRICK];
   }
 
   howManySheep() {
-    return this.wood;
+    return this[SHEEP];
   }
 
   howManyWheat() {
-    return this.wood;
+    return this[WHEAT];
   }
 
   howManyOre() {
-    return this.wood;
+    return this[ORE];
   }
 
   howManyKnights() {
-    return this.knights;
+    return this[KNIGHT];
   }
 
   howManyVictoryPoints() {
-    return this.knights;
+    return this[VICTORY_POINT];
   }
 
   howManyMonopoly() {
-    return this.knights;
+    return this[MONOPOLY];
   }
 
   howManyRoadBuilding() {
-    return this.knights;
+    return this[ROAD_BUILDING];
   }
 
   howManyYearOfPlenty() {
-    return this.knights;
+    return this[YEAR_OF_PLENTY];
   }
 
   removeCards(cardKey, numberOfCards) {

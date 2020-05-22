@@ -3,26 +3,8 @@ import images from '../assetImports';
 import Player from '../Player';
 import PlayerDeck from '../ui/PlayerDeck';
 import CardDeck from '../CardDeck';
+import { DESERT_TILE, ORE_TILE, BRICK_TILE, SHEEP_TILE, WHEAT_TILE, WOOD_TILE, ORE, BRICK, WOOD, WHEAT, SHEEP, KNIGHT, MONOPOLY, YEAR_OF_PLENTY, ROAD_BUILDING, VICTORY_POINT } from '../globalConstants';
 
-
-const WOOD_KEY = 'wood';
-const DESERT_KEY = 'desert';
-const BRICK_KEY = 'brick';
-const SHEEP_KEY = 'sheep';
-const WHEAT_KEY = 'wheat';
-const ORE_KEY = 'ore';
-
-const BRICK_CARD_KEY = 'brickCard';
-const SHEEP_CARD_KEY = 'sheepCard';
-const WHEAT_CARD_KEY = 'wheatCard';
-const WOOD_CARD_KEY = 'woodCard';
-const ORE_CARD_KEY = 'oreCard';
-
-const KNIGHT_KEY = 'knight';
-const VICTORY_POINT_KEY = 'victoryPoint';
-const MONOPOLY_KEY = 'monopoly';
-const ROAD_BUILDING_KEY = 'roadBuilding';
-const YEAR_OF_PLENTY_KEY = 'yearOfPlenty';
 
 const TILES_IN_GAME = 19;
 const DESERT_CANT_BE_ROLLED = 0;
@@ -42,13 +24,13 @@ export default class GameScene extends Phaser.Scene {
     this.cardDeck = new CardDeck();
     this.boardTileData = [];
     this.tileContainers = [];
-    this.resources = [
-      DESERT_KEY,
-      ORE_KEY, ORE_KEY, ORE_KEY,
-      BRICK_KEY, BRICK_KEY, BRICK_KEY,
-      SHEEP_KEY, SHEEP_KEY, SHEEP_KEY, SHEEP_KEY,
-      WHEAT_KEY, WHEAT_KEY, WHEAT_KEY, WHEAT_KEY,
-      WOOD_KEY, WOOD_KEY, WOOD_KEY, WOOD_KEY,
+    this.resourceTiles = [
+      DESERT_TILE,
+      ORE_TILE, ORE_TILE, ORE_TILE,
+      BRICK_TILE, BRICK_TILE, BRICK_TILE,
+      SHEEP_TILE, SHEEP_TILE, SHEEP_TILE, SHEEP_TILE,
+      WHEAT_TILE, WHEAT_TILE, WHEAT_TILE, WHEAT_TILE,
+      WOOD_TILE, WOOD_TILE, WOOD_TILE, WOOD_TILE,
     ];
     this.resourceNumbers = [
       2,
@@ -75,40 +57,41 @@ export default class GameScene extends Phaser.Scene {
       '12': 1
     }
     this.resourceCards = {
-      [ORE_KEY]: 19,
-      [BRICK_KEY]: 19,
-      [SHEEP_KEY]: 19,
-      [WHEAT_KEY]: 19,
-      [WOOD_KEY]: 19
+      [ORE]: 19,
+      [BRICK]: 19,
+      [SHEEP]: 19,
+      [WHEAT]: 19,
+      [WOOD]: 19
     };
     this.developmentCards = {
-      [KNIGHT_KEY]: 14,
-      [MONOPOLY_KEY]: 2,
-      [ROAD_BUILDING_KEY]: 2,
-      [YEAR_OF_PLENTY_KEY]: 2,
-      [VICTORY_POINT_KEY]: 5
+      [KNIGHT]: 14,
+      [MONOPOLY]: 2,
+      [ROAD_BUILDING]: 2,
+      [YEAR_OF_PLENTY]: 2,
+      [VICTORY_POINT]: 5
     };
   }
 
   preload() {
-    this.load.image(WOOD_KEY, images.forest);
-    this.load.image(DESERT_KEY, images.desert);
-    this.load.image(SHEEP_KEY, images.sheep);
-    this.load.image(BRICK_KEY, images.brick);
-    this.load.image(WHEAT_KEY, images.wheat);
-    this.load.image(ORE_KEY, images.ore);
-
-    this.load.image(BRICK_CARD_KEY, images.brickCard);
-    this.load.image(SHEEP_CARD_KEY, images.sheepCard);
-    this.load.image(WHEAT_CARD_KEY, images.wheatCard);
-    this.load.image(WOOD_CARD_KEY, images.woodCard);
-    this.load.image(ORE_CARD_KEY, images.oreCard);
-
-    this.load.image(KNIGHT_KEY, images.knightCard);
-    this.load.image(ROAD_BUILDING_KEY, images.roadBuildingCard);
-    this.load.image(MONOPOLY_KEY, images.monopolyCard);
-    this.load.image(YEAR_OF_PLENTY_KEY, images.yearOfPlentyCard);
-    this.load.image(VICTORY_POINT_KEY, images.victoryPointCard);
+    // resource tile images
+    this.load.image(WOOD_TILE, images.forest);
+    this.load.image(DESERT_TILE, images.desert);
+    this.load.image(SHEEP_TILE, images.sheep);
+    this.load.image(BRICK_TILE, images.brick);
+    this.load.image(WHEAT_TILE, images.wheat);
+    this.load.image(ORE_TILE, images.ore);
+    // resource card images
+    this.load.image(BRICK, images.brickCard);
+    this.load.image(SHEEP, images.sheepCard);
+    this.load.image(WHEAT, images.wheatCard);
+    this.load.image(WOOD, images.woodCard);
+    this.load.image(ORE, images.oreCard);
+    // development card images
+    this.load.image(KNIGHT, images.knightCard);
+    this.load.image(ROAD_BUILDING, images.roadBuildingCard);
+    this.load.image(MONOPOLY, images.monopolyCard);
+    this.load.image(YEAR_OF_PLENTY, images.yearOfPlentyCard);
+    this.load.image(VICTORY_POINT, images.victoryPointCard);
   }
 
   create() {
@@ -122,21 +105,21 @@ export default class GameScene extends Phaser.Scene {
     this.playerDeck = new PlayerDeck(this);
     this.player = new Player(this, this.playerDeck);
 
-    this.player.addResourceCard(BRICK_CARD_KEY, this.cardDeck);
-    this.player.addResourceCard(BRICK_CARD_KEY, this.cardDeck);
-    this.player.addResourceCard(BRICK_CARD_KEY, this.cardDeck);
-    this.player.addResourceCard(BRICK_CARD_KEY, this.cardDeck);
-    this.player.addResourceCard(BRICK_CARD_KEY, this.cardDeck);
-    this.player.addResourceCard(SHEEP_CARD_KEY, this.cardDeck);
-    this.player.addResourceCard(SHEEP_CARD_KEY, this.cardDeck);
+    this.player.addResourceCard(BRICK, this.cardDeck);
+    this.player.addResourceCard(BRICK, this.cardDeck);
+    this.player.addResourceCard(BRICK, this.cardDeck);
+    this.player.addResourceCard(BRICK, this.cardDeck);
+    this.player.addResourceCard(BRICK, this.cardDeck);
+    this.player.addResourceCard(SHEEP, this.cardDeck);
+    this.player.addResourceCard(SHEEP, this.cardDeck);
     // this.player.addResourceCard(WHEAT_CARD_KEY);
-    this.player.addResourceCard(WOOD_CARD_KEY, this.cardDeck);
+    this.player.addResourceCard(WOOD, this.cardDeck);
     // this.player.addResourceCard(ORE_CARD_KEY);
 
-    this.player.addDevelopmentCard(KNIGHT_KEY, this.cardDeck);
-    this.player.addDevelopmentCard(ROAD_BUILDING_KEY, this.cardDeck);
-    this.player.addDevelopmentCard(ROAD_BUILDING_KEY, this.cardDeck);
-    this.player.addDevelopmentCard(ROAD_BUILDING_KEY, this.cardDeck);
+    this.player.addDevelopmentCard(KNIGHT, this.cardDeck);
+    this.player.addDevelopmentCard(ROAD_BUILDING, this.cardDeck);
+    this.player.addDevelopmentCard(ROAD_BUILDING, this.cardDeck);
+    this.player.addDevelopmentCard(ROAD_BUILDING, this.cardDeck);
   }
 
   update() {
@@ -209,7 +192,7 @@ export default class GameScene extends Phaser.Scene {
 
       let graphics = this.add.graphics();
 
-      if (tile.resource !== DESERT_KEY) {
+      if (tile.resource !== DESERT_TILE) {
         graphics.fillStyle(0xffffff, 0.8);
         graphics.fillCircle(0, 0, 35);
         this.addResourceNumbersToGraphicTiles(graphics, tile, i);
@@ -242,7 +225,7 @@ export default class GameScene extends Phaser.Scene {
   // custom class methods...
   createAllTiles() {
     let tiles = [];
-    let resources = this.resources.slice();
+    let resources = this.resourceTiles.slice();
     let resourceNumbers = this.resourceNumbers.slice();
     let resourcesLeft = TILES_IN_GAME;
 
@@ -252,7 +235,7 @@ export default class GameScene extends Phaser.Scene {
 
       let { coordX, coordY } = calculateTilePixelCoords(tile.x, tile.y);
 
-      if (resources[resourceIndex] === DESERT_KEY)
+      if (resources[resourceIndex] === DESERT_TILE)
         resourceNumbersIndex = null;
 
       tiles = tiles.concat(
