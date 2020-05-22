@@ -3,9 +3,46 @@
 <html>
   <head>
     <title>Settlers of CaTodd</title>
+    <style>
+      body {
+        margin: 0;
+      }
+      #playerName {
+        color: blue;
+        width: 300px;
+        font-size: 32px;
+        margin: 0 auto;
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 50%;
+        text-align: center;
+      }
+      #playButton {
+        position: absolute;
+        margin: 0 auto;
+        width: 100%;
+        left: 0;
+        right: 0;
+        top: 70%;
+        font-size: 30px;
+        background-color: white;
+        color: blue;
+        border: none;
+        display: none;
+      }
+      #playButton:hover {
+        background-color: orange;
+        color: white;
+        cursor: pointer;
+      }
+    </style>
   </head>
   <body>
+    <input type='text' id='playerName' placeholder="Player Name" />
+    <button type='button' id='playButton'>Play!</button>
     <script src="main.js"></script>
+    <script src='startupScript.js'></script>
   </body>
 </html>
 

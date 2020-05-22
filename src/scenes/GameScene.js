@@ -1,12 +1,14 @@
 import Phaser from 'phaser';
-import images from '../assetImports';
+import assets from '../assetImports';
 import Player from '../Player';
 import PlayerDeck from '../ui/PlayerDeck';
 import CardDeck from '../CardDeck';
 import {
   calculateTilePixelCoords,
   pickRandomIndex,
-  randomizeArray
+  randomizeArray,
+  buttonHoverState,
+  buttonRestState
 } from '../utils';
 import {
   DESERT_TILE_IMG, ORE_TILE_IMG, BRICK_TILE_IMG, SHEEP_TILE_IMG, WHEAT_TILE_IMG, WOOD_TILE_IMG,
@@ -77,37 +79,41 @@ export default class GameScene extends Phaser.Scene {
     };
   }
 
+  init({ playerName }) {
+    this.playerName = playerName;
+  }
+
   preload() {
     // resource tile image sprites
-    this.load.image(WOOD_TILE_IMG, images.woodTileImg);
-    this.load.image(DESERT_TILE_IMG, images.desertTileImg);
-    this.load.image(SHEEP_TILE_IMG, images.sheepTileImg);
-    this.load.image(BRICK_TILE_IMG, images.brickTileImg);
-    this.load.image(WHEAT_TILE_IMG, images.wheatTileImg);
-    this.load.image(ORE_TILE_IMG, images.oreTileImg);
+    this.load.image(WOOD_TILE_IMG, assets.woodTileImg);
+    this.load.image(DESERT_TILE_IMG, assets.desertTileImg);
+    this.load.image(SHEEP_TILE_IMG, assets.sheepTileImg);
+    this.load.image(BRICK_TILE_IMG, assets.brickTileImg);
+    this.load.image(WHEAT_TILE_IMG, assets.wheatTileImg);
+    this.load.image(ORE_TILE_IMG, assets.oreTileImg);
     // resource tile color sprites
-    this.load.image(WOOD_TILE_COLOR, images.woodTileColor);
-    this.load.image(DESERT_TILE_COLOR, images.desertTileColor);
-    this.load.image(SHEEP_TILE_COLOR, images.sheepTileColor);
-    this.load.image(BRICK_TILE_COLOR, images.brickTileColor);
-    this.load.image(WHEAT_TILE_COLOR, images.wheatTileColor);
-    this.load.image(ORE_TILE_COLOR, images.oreTileColor);
+    this.load.image(WOOD_TILE_COLOR, assets.woodTileColor);
+    this.load.image(DESERT_TILE_COLOR, assets.desertTileColor);
+    this.load.image(SHEEP_TILE_COLOR, assets.sheepTileColor);
+    this.load.image(BRICK_TILE_COLOR, assets.brickTileColor);
+    this.load.image(WHEAT_TILE_COLOR, assets.wheatTileColor);
+    this.load.image(ORE_TILE_COLOR, assets.oreTileColor);
     // resource card images
-    this.load.image(BRICK, images.brickCard);
-    this.load.image(SHEEP, images.sheepCard);
-    this.load.image(WHEAT, images.wheatCard);
-    this.load.image(WOOD, images.woodCard);
-    this.load.image(ORE, images.oreCard);
+    this.load.image(BRICK, assets.brickCard);
+    this.load.image(SHEEP, assets.sheepCard);
+    this.load.image(WHEAT, assets.wheatCard);
+    this.load.image(WOOD, assets.woodCard);
+    this.load.image(ORE, assets.oreCard);
     // development card images
-    this.load.image(KNIGHT, images.knightCard);
-    this.load.image(ROAD_BUILDING, images.roadBuildingCard);
-    this.load.image(MONOPOLY, images.monopolyCard);
-    this.load.image(YEAR_OF_PLENTY, images.yearOfPlentyCard);
-    this.load.image(VICTORY_POINT, images.victoryPointCard);
+    this.load.image(KNIGHT, assets.knightCard);
+    this.load.image(ROAD_BUILDING, assets.roadBuildingCard);
+    this.load.image(MONOPOLY, assets.monopolyCard);
+    this.load.image(YEAR_OF_PLENTY, assets.yearOfPlentyCard);
+    this.load.image(VICTORY_POINT, assets.victoryPointCard);
     // back of development card
-    this.load.image(DEV_CARD, images.devCard)
-    this.load.image(OCEAN, images.ocean);
-    this.load.image(BACKGROUND_COLOR, images.backgroundColor);
+    this.load.image(DEV_CARD, assets.devCard)
+    this.load.image(OCEAN, assets.ocean);
+    this.load.image(BACKGROUND_COLOR, assets.backgroundColor);
   }
 
   create() {
@@ -122,7 +128,7 @@ export default class GameScene extends Phaser.Scene {
     this.bankCardsUIContainer = this.add.container(300, 50);
     this.playerDeck = new PlayerDeck(this);
     this.cardDeck = new CardDeck(this);
-    this.player = new Player(this, this.playerDeck);
+    this.player = new Player(this, this.playerDeck, this.playerName);
 
     this.cardDeck.showBankUI(this);
 
@@ -324,8 +330,8 @@ export default class GameScene extends Phaser.Scene {
     this.tileStyleChanger = this.add.text(50, 0, 'Change Tile Style', { fontSize: '32px', fill: '#000' });
     this.tileStyleChanger
       .setInteractive()
-      .on('pointerover', () => this.buttonHoverState(this.tileStyleChanger))
-      .on('pointerout', () => this.buttonRestState(this.tileStyleChanger))
+      .on('pointerover', () => buttonHoverState(this.tileStyleChanger))
+      .on('pointerout', () => buttonRestState(this.tileStyleChanger))
       .on('pointerdown', () => this.switchTileStyles());
   }
 
@@ -333,8 +339,8 @@ export default class GameScene extends Phaser.Scene {
     this.backgroundStyleChanger = this.add.text(500, 0, 'Change Background Style', { fontSize: '32px', fill: '#000' });
     this.backgroundStyleChanger
       .setInteractive()
-      .on('pointerover', () => this.buttonHoverState(this.backgroundStyleChanger))
-      .on('pointerout', () => this.buttonRestState(this.backgroundStyleChanger))
+      .on('pointerover', () => buttonHoverState(this.backgroundStyleChanger))
+      .on('pointerout', () => buttonRestState(this.backgroundStyleChanger))
       .on('pointerdown', () => this.switchBackgroundStyles());
   }
 
@@ -342,21 +348,9 @@ export default class GameScene extends Phaser.Scene {
     this.redoBoardButton = this.add.text(50, 50, 'Redo Board', { fontSize: '32px', fill: '#000' });
     this.redoBoardButton
       .setInteractive()
-      .on('pointerover', () => this.buttonHoverState(this.redoBoardButton))
-      .on('pointerout', () => this.buttonRestState(this.redoBoardButton))
-      .on('pointerdown', () => {
-        this.makeGameBoard();
-      });
-  }
-
-  buttonHoverState(button) {
-    button.setStyle({ fill: '#ff8c00' });
-    document.body.style.cursor = 'pointer';
-  }
-
-  buttonRestState(button) {
-    button.setStyle({ fill: '#000' });
-    document.body.style.cursor = 'default';
+      .on('pointerover', () => buttonHoverState(this.redoBoardButton))
+      .on('pointerout', () => buttonRestState(this.redoBoardButton))
+      .on('pointerdown', () => this.makeGameBoard());
   }
 
   setOneTileData(tileDataObj, coordX, coordY, imageKeyIndex, number) {

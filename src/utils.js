@@ -31,8 +31,20 @@ function randomizeArray(array) {
   return a;
 }
 
+function buttonHoverState(button) {
+  button.setStyle({ fill: '#ff8c00' });
+  document.body.style.cursor = 'pointer';
+}
+
+function buttonRestState(button, originalTextColor = '#000') {
+  button.setStyle({ fill: originalTextColor });
+  document.body.style.cursor = 'default';
+}
+
 export {
   calculateTilePixelCoords,
   pickRandomIndex,
-  randomizeArray
+  randomizeArray,
+  buttonHoverState,
+  buttonRestState
 };

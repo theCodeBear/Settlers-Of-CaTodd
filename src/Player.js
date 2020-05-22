@@ -3,8 +3,9 @@ import { BRICK, SHEEP, WHEAT, WOOD, ORE, KNIGHT, MONOPOLY, YEAR_OF_PLENTY, ROAD_
 
 
 export default class Player {
-  constructor(scene, playerDeck) {
+  constructor(scene, playerDeck, name) {
     this.scene = scene;
+    this.name = name;
     this.playerDeck = playerDeck;
 
     this.points = 0;
