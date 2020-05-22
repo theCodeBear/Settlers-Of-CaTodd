@@ -223,7 +223,7 @@ export default class GameScene extends Phaser.Scene {
       let graphics = this.add.graphics();
 
       if (tile.resource !== DESERT_TILE) {
-        graphics.fillStyle(0xffffff, 0.8);
+        graphics.fillStyle(0x000000, 0.9);
         graphics.fillCircle(0, 0, 35);
         this.addResourceNumbersToGraphicTiles(graphics, tile, i);
       }
@@ -231,7 +231,7 @@ export default class GameScene extends Phaser.Scene {
   }
 
   addResourceNumbersToGraphicTiles(graphics, tileData, index) {
-    const textStyle = { fontSize: '32px', color: tileData.number === 6 || tileData.number === 8 ? '#ff8c00' : '#000' };
+    const textStyle = { fontSize: '32px', color: tileData.number === 6 || tileData.number === 8 ? '#ff8c00' : '#fff' };
     const resourceNumberText = this.add.text(0, 0, tileData.number, textStyle);
     resourceNumberText.setOrigin(0.5, 0.5);
 
