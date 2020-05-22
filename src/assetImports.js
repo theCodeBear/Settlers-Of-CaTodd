@@ -19,6 +19,8 @@ import yearOfPlentyCard from 'url:../public/img/yearOfPlentyCard.png';
 import roadBuildingCard from 'url:../public/img/roadBuildingCard.png';
 import victoryPointCard from 'url:../public/img/victoryPointCard.png';
 
+import devCard from 'url:../public/img/Catan_devcard.png';
+
 export default {
     brick,
     desert,
@@ -35,5 +37,6 @@ export default {
     monopolyCard,
     yearOfPlentyCard,
     roadBuildingCard,
-    victoryPointCard
+    victoryPointCard,
+    devCard
 };

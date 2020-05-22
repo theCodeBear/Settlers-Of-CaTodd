@@ -1,5 +1,10 @@
 import Phaser from 'phaser';
-import { BRICK, WOOD, SHEEP, WHEAT, ORE, KNIGHT, ROAD_BUILDING, YEAR_OF_PLENTY, MONOPOLY, VICTORY_POINT } from '../globalConstants';
+import { displayCardNumberOnTopOfCard } from './uiUtils';
+import {
+  BRICK, WOOD, SHEEP, WHEAT, ORE,
+  KNIGHT, ROAD_BUILDING, YEAR_OF_PLENTY, MONOPOLY, VICTORY_POINT,
+  EMPTY_DECK_ALPHA
+} from '../globalConstants';
 
 
 const CARD_POSITIONS = {
@@ -19,7 +24,6 @@ const CARD_POSITIONS = {
 const NEXT_CARD_OFFSET_X = 10;
 const NEXT_CARD_OFFSET_Y = 5;
 const SCALE_CARDS = 0.7;
-const EMPTY_DECK_ALPHA = 0.4;
 
 const MAX_CARDS_TO_SHOW = 3;
 
@@ -72,14 +76,8 @@ export default class PlayerDeck {
       uiArray = uiArray.concat(cardImage);
     }
 
-    let graphics = scene.add.graphics();
-    graphics.fillStyle = 0x000000;
-    graphics.fillCircle(cardPosition.x + 45, cardPosition.y + 67, 20);
-    uiArray = uiArray.concat(graphics);
-
-    let cardText = scene.add.text(cardPosition.x, cardPosition.y, updatedNumberOfCardType, { fontSize: '32px' });
-    cardText.setOrigin(-1.8, -1.5); // this somehow centers the text in the card
-    uiArray = uiArray.concat(cardText);
+    let cardNumbersUI = displayCardNumberOnTopOfCard(scene, cardPosition, updatedNumberOfCardType, '32px', -1.8, -1.5, 45, 67);
+    uiArray = uiArray.concat(cardNumbersUI);
 
     this.container.add(uiArray);
   }

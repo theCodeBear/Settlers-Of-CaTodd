@@ -3,7 +3,12 @@ import images from '../assetImports';
 import Player from '../Player';
 import PlayerDeck from '../ui/PlayerDeck';
 import CardDeck from '../CardDeck';
-import { DESERT_TILE, ORE_TILE, BRICK_TILE, SHEEP_TILE, WHEAT_TILE, WOOD_TILE, ORE, BRICK, WOOD, WHEAT, SHEEP, KNIGHT, MONOPOLY, YEAR_OF_PLENTY, ROAD_BUILDING, VICTORY_POINT } from '../globalConstants';
+import {
+  DESERT_TILE, ORE_TILE, BRICK_TILE, SHEEP_TILE, WHEAT_TILE, WOOD_TILE,
+  ORE, BRICK, WOOD, WHEAT, SHEEP,
+  KNIGHT, MONOPOLY, YEAR_OF_PLENTY, ROAD_BUILDING, VICTORY_POINT,
+  DEV_CARD
+} from '../globalConstants';
 
 
 const TILES_IN_GAME = 19;
@@ -21,7 +26,8 @@ export default class GameScene extends Phaser.Scene {
     this.redoBoardButon;
     this.player;
     this.playerDeck;
-    this.cardDeck = new CardDeck();
+    this.cardDeck;
+    this.bankCardsUIContainer;
     this.boardTileData = [];
     this.tileContainers = [];
     this.resourceTiles = [
@@ -92,6 +98,8 @@ export default class GameScene extends Phaser.Scene {
     this.load.image(MONOPOLY, images.monopolyCard);
     this.load.image(YEAR_OF_PLENTY, images.yearOfPlentyCard);
     this.load.image(VICTORY_POINT, images.victoryPointCard);
+    // back of development card
+    this.load.image(DEV_CARD, images.devCard)
   }
 
   create() {
@@ -102,8 +110,12 @@ export default class GameScene extends Phaser.Scene {
     console.log('resource cards', this.resourceCards);
     console.log('dev cards', this.developmentCards);
 
+    this.bankCardsUIContainer = this.add.container(300, 50);
     this.playerDeck = new PlayerDeck(this);
+    this.cardDeck = new CardDeck(this);
     this.player = new Player(this, this.playerDeck);
+
+    this.cardDeck.showBankUI(this);
 
     this.player.addResourceCard(BRICK, this.cardDeck);
     this.player.addResourceCard(BRICK, this.cardDeck);
@@ -120,13 +132,21 @@ export default class GameScene extends Phaser.Scene {
     this.player.addDevelopmentCard(ROAD_BUILDING, this.cardDeck);
     this.player.addDevelopmentCard(ROAD_BUILDING, this.cardDeck);
     this.player.addDevelopmentCard(ROAD_BUILDING, this.cardDeck);
+
+    this.cardDeck.removeCard(YEAR_OF_PLENTY);
+
+    this.manuallyUpdate();
   }
 
-  update() {
-  }
+  // update() {
+  // }
 
 
   // OTHER CLASS METHODS
+
+  manuallyUpdate() {
+    this.cardDeck.showBankUI(this);
+  }
 
   createRedoBoardButton() {
     this.redoBoardButton = this.add.text(50, 50, 'Redo Board', { fontSize: '32px', fill: '#000' });

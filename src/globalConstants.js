@@ -25,6 +25,9 @@ const MONOPOLY = 'monopoly';
 const ROAD_BUILDING = 'roadBuilding';
 const YEAR_OF_PLENTY = 'yearOfPlenty';
 
+const DEV_CARD = 'devCard';
+const EMPTY_DECK_ALPHA = 0.4;
+
 
 export {
   WOOD_TILE,
@@ -46,4 +49,7 @@ export {
   MONOPOLY,
   ROAD_BUILDING,
   YEAR_OF_PLENTY,
+
+  DEV_CARD,
+  EMPTY_DECK_ALPHA
 };

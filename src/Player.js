@@ -63,7 +63,7 @@ export default class Player {
   addResourceCard(resourceCardKey, gameCardDeck) {
     this[resourceCardKey] += 1;
     this.playerDeck.addCard(this.scene, resourceCardKey, this[resourceCardKey]);
-    gameCardDeck.removeCards(resourceCardKey, 1);
+    gameCardDeck.removeCard(resourceCardKey);
   }
 
   removeResourceCard(resource) {
@@ -73,7 +73,7 @@ export default class Player {
   addDevelopmentCard(devCardKey, gameCardDeck) {
     this[devCardKey] += 1;
     this.playerDeck.addCard(this.scene, devCardKey, this[devCardKey]);
-    gameCardDeck.removeCards(devCardKey, 1);
+    gameCardDeck.removeCard(devCardKey);
   }
 
   useDevelopmentCard(devCard, gameCardDeck) {
