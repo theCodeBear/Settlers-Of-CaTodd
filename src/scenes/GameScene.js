@@ -100,10 +100,11 @@ export default class GameScene extends Phaser.Scene {
     this.load.image(VICTORY_POINT, images.victoryPointCard);
     // back of development card
     this.load.image(DEV_CARD, images.devCard)
+    this.load.image('ocean', images.ocean);
   }
 
   create() {
-    this.cameras.main.setBackgroundColor('#37d');
+    this.setBackground();
     this.makeGameBoard();
     this.createRedoBoard
     this.createRedoBoardButton();
@@ -146,6 +147,15 @@ export default class GameScene extends Phaser.Scene {
 
   manuallyUpdate() {
     this.cardDeck.showBankUI(this);
+  }
+
+  setBackground() {
+    // this.cameras.main.setBackgroundColor('#37d');
+    let oceanBackground = this.add.image(this.cameras.main.width / 2, this.cameras.main.height / 2, 'ocean');
+    let scaleX = this.cameras.main.width / oceanBackground.width;
+    let scaleY = this.cameras.main.height / oceanBackground.height;
+    let scale = Math.max(scaleX, scaleY);
+    oceanBackground.setScale(scale).setScrollFactor(0);
   }
 
   createRedoBoardButton() {

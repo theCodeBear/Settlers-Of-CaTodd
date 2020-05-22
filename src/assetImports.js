@@ -20,6 +20,7 @@ import roadBuildingCard from 'url:../public/img/roadBuildingCard.png';
 import victoryPointCard from 'url:../public/img/victoryPointCard.png';
 
 import devCard from 'url:../public/img/Catan_devcard.png';
+import ocean from 'url:../public/img/ocean.png';
 
 export default {
     brick,
@@ -38,5 +39,6 @@ export default {
     yearOfPlentyCard,
     roadBuildingCard,
     victoryPointCard,
-    devCard
+    devCard,
+    ocean
 };
