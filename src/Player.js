@@ -69,21 +69,28 @@ export default class Player {
     return this.points;
   }
 
-  addResourceCard(resourceCardKey) {
+  addResourceCard(resourceCardKey, gameCardDeck) {
     this[resourceCardKey] += 1;
-    this.playerDeck.createResourceCard(this.scene, resourceCardKey, this[resourceCardKey]);
+    this.playerDeck.addCard(this.scene, resourceCardKey, this[resourceCardKey]);
+    gameCardDeck.removeCards(resourceCardKey, 1);
   }
 
   removeResourceCard(resource) {
     this[resource] -= 1;
   }
 
-  addDevelopmentCard(devCard) {
-    this[devCard] += 1;
+  addDevelopmentCard(devCardKey, gameCardDeck) {
+    this[devCardKey] += 1;
+    this.playerDeck.addCard(this.scene, devCardKey, this[devCardKey]);
+    gameCardDeck.removeCards(devCardKey, 1);
   }
 
-  removeDevelopmentCard(devCard) {
+  useDevelopmentCard(devCard, gameCardDeck) {
     this[devCard] -= 1;
+    if (devCard === KNIGHT_KEY) this.playKnightCard();
+    if (devCard === MONOPOLY_KEY) this.playMonopolyCard();
+    if (devCard === YEAR_OF_PLENTY_KEY) this.playYearOfPlentyCard();
+    if (devCard === ROAD_BUILDING_KEY) this.playRoadBuildingCard();
   }
 
   playKnightCard() {

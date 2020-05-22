@@ -13,6 +13,12 @@ import wheatCard from 'url:../public/img/wheatCard.png';
 import woodCard from 'url:../public/img/woodCard.png';
 import oreCard from 'url:../public/img/oreCard.png';
 
+import knightCard from 'url:../public/img/knightCard.png';
+import monopolyCard from 'url:../public/img/monopolyCard.png';
+import yearOfPlentyCard from 'url:../public/img/yearOfPlentyCard.png';
+import roadBuildingCard from 'url:../public/img/roadBuildingCard.png';
+import victoryPointCard from 'url:../public/img/victoryPointCard.png';
+
 export default {
     brick,
     desert,
@@ -24,5 +30,10 @@ export default {
     sheepCard,
     wheatCard,
     woodCard,
-    oreCard
+    oreCard,
+    knightCard,
+    monopolyCard,
+    yearOfPlentyCard,
+    roadBuildingCard,
+    victoryPointCard
 };

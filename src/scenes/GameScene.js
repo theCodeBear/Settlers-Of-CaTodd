@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import images from '../assetImports';
 import Player from '../Player';
 import PlayerDeck from '../ui/PlayerDeck';
+import CardDeck from '../CardDeck';
 
 
 const WOOD_KEY = 'wood';
@@ -26,7 +27,7 @@ const YEAR_OF_PLENTY_KEY = 'yearOfPlenty';
 const TILES_IN_GAME = 19;
 const DESERT_CANT_BE_ROLLED = 0;
 
-const BOARD_MIDDLELEFT_X_COORD = 600;
+const BOARD_MIDDLELEFT_X_COORD = 650;
 const BOARD_MIDDLELEFT_Y_COORD = 450;
 const TILE_X_FULL_OFFSET = 173;
 const TILE_Y_FULL_OFFSET = 150;
@@ -38,6 +39,7 @@ export default class GameScene extends Phaser.Scene {
     this.redoBoardButon;
     this.player;
     this.playerDeck;
+    this.cardDeck = new CardDeck();
     this.boardTileData = [];
     this.tileContainers = [];
     this.resources = [
@@ -101,6 +103,12 @@ export default class GameScene extends Phaser.Scene {
     this.load.image(WHEAT_CARD_KEY, images.wheatCard);
     this.load.image(WOOD_CARD_KEY, images.woodCard);
     this.load.image(ORE_CARD_KEY, images.oreCard);
+
+    this.load.image(KNIGHT_KEY, images.knightCard);
+    this.load.image(ROAD_BUILDING_KEY, images.roadBuildingCard);
+    this.load.image(MONOPOLY_KEY, images.monopolyCard);
+    this.load.image(YEAR_OF_PLENTY_KEY, images.yearOfPlentyCard);
+    this.load.image(VICTORY_POINT_KEY, images.victoryPointCard);
   }
 
   create() {
@@ -114,16 +122,21 @@ export default class GameScene extends Phaser.Scene {
     this.playerDeck = new PlayerDeck(this);
     this.player = new Player(this, this.playerDeck);
 
-    this.player.addResourceCard(BRICK_CARD_KEY);
-    this.player.addResourceCard(BRICK_CARD_KEY);
-    this.player.addResourceCard(BRICK_CARD_KEY);
-    this.player.addResourceCard(BRICK_CARD_KEY);
-    this.player.addResourceCard(BRICK_CARD_KEY);
-    this.player.addResourceCard(SHEEP_CARD_KEY);
-    this.player.addResourceCard(SHEEP_CARD_KEY);
+    this.player.addResourceCard(BRICK_CARD_KEY, this.cardDeck);
+    this.player.addResourceCard(BRICK_CARD_KEY, this.cardDeck);
+    this.player.addResourceCard(BRICK_CARD_KEY, this.cardDeck);
+    this.player.addResourceCard(BRICK_CARD_KEY, this.cardDeck);
+    this.player.addResourceCard(BRICK_CARD_KEY, this.cardDeck);
+    this.player.addResourceCard(SHEEP_CARD_KEY, this.cardDeck);
+    this.player.addResourceCard(SHEEP_CARD_KEY, this.cardDeck);
     // this.player.addResourceCard(WHEAT_CARD_KEY);
-    this.player.addResourceCard(WOOD_CARD_KEY);
+    this.player.addResourceCard(WOOD_CARD_KEY, this.cardDeck);
     // this.player.addResourceCard(ORE_CARD_KEY);
+
+    this.player.addDevelopmentCard(KNIGHT_KEY, this.cardDeck);
+    this.player.addDevelopmentCard(ROAD_BUILDING_KEY, this.cardDeck);
+    this.player.addDevelopmentCard(ROAD_BUILDING_KEY, this.cardDeck);
+    this.player.addDevelopmentCard(ROAD_BUILDING_KEY, this.cardDeck);
   }
 
   update() {
