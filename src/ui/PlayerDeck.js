@@ -1,24 +1,25 @@
 import Phaser from 'phaser';
 import { displayCardNumberOnTopOfCard } from './uiUtils';
+import { getCardType } from '../utils';
 import {
   BRICK, WOOD, SHEEP, WHEAT, ORE,
   KNIGHT, ROAD_BUILDING, YEAR_OF_PLENTY, MONOPOLY, VICTORY_POINT,
-  EMPTY_DECK_ALPHA
+  EMPTY_DECK_ALPHA, DEVELOPMENT, RESOURCE
 } from '../globalConstants';
 
 
 const CARD_POSITIONS = {
-  [BRICK]: { x: 0, y: 0 },
-  [WOOD]: { x: 0, y: 160 },
-  [SHEEP]: { x: 0, y: 320 },
-  [WHEAT]: { x: 0, y: 480 },
-  [ORE]: { x: 0, y: 640 },
+  [BRICK]: { x: -326.25, y: 0 },
+  [WOOD]: { x: -191.75, y: 0 },
+  [SHEEP]: { x: -57.25, y: 0 },
+  [WHEAT]: { x: 77.25, y: 0 },
+  [ORE]: { x: 211.75, y: 0 },
 
-  [KNIGHT]: { x: 200, y: 480 },
-  [ROAD_BUILDING]: { x: 200, y: 640 },
-  [YEAR_OF_PLENTY]: { x: 330, y: 640 },
-  [MONOPOLY]: { x: 460, y: 640 },
-  [VICTORY_POINT]: { x: 590, y: 640 }
+  [KNIGHT]: { x: -326.25, y: 0 },
+  [ROAD_BUILDING]: { x: -191.75, y: 0 },
+  [YEAR_OF_PLENTY]: { x: -57.25, y: 0 },
+  [MONOPOLY]: { x: 77.25, y: 0 },
+  [VICTORY_POINT]: { x: 211.75, y: 0 }
 };
 
 const NEXT_CARD_OFFSET_X = 10;
@@ -29,7 +30,11 @@ const MAX_CARDS_TO_SHOW = 3;
 
 export default class PlayerDeck {
   constructor(scene) {
-    this.container = scene.add.container(50, 100);
+    let windowHeight = window.innerHeight;
+    this.cardContainers = {};
+    this.cardContainers[DEVELOPMENT] = scene.add.container(25 + 326.25, windowHeight - 100);
+    this.cardContainers[RESOURCE] = scene.add.container(25 + 326.25, windowHeight-300);
+
     this.showEmptyCardPile(scene, BRICK);
     this.showEmptyCardPile(scene, WOOD);
     this.showEmptyCardPile(scene, WHEAT);
@@ -48,10 +53,13 @@ export default class PlayerDeck {
       x: CARD_POSITIONS[imageKey].x,
       y: CARD_POSITIONS[imageKey].y
     };
-    let cardShadow = scene.add.image(cardPosition.x, cardPosition.y, imageKey)
-    cardShadow.setScale(SCALE_CARDS).setOrigin(0, 0);
-    cardShadow.alpha = EMPTY_DECK_ALPHA;
-    this.container.add(cardShadow);
+    let cardGhost = scene.add.image(cardPosition.x, cardPosition.y, imageKey)
+    cardGhost.setScale(SCALE_CARDS)//.setOrigin(1);
+    cardGhost.alpha = EMPTY_DECK_ALPHA;
+    cardGhost.setOrigin(0, 0.5);
+    let cardType = getCardType(imageKey);
+
+    this.cardContainers[cardType].add(cardGhost);
   }
 
   addCard(scene, imageKey, updatedNumberOfCardType) {
@@ -66,20 +74,23 @@ export default class PlayerDeck {
 
     if (updatedNumberOfCardType <= MAX_CARDS_TO_SHOW) {
       let cardShadow = scene.add.image(cardPosition.x + shadowOffset.x, cardPosition.y + shadowOffset.y, imageKey)
-      cardShadow.setScale(SCALE_CARDS).setOrigin(0, 0);
+      cardShadow.setScale(SCALE_CARDS).setOrigin(0, 0.5);
       cardShadow.tint = 0x000000;
       cardShadow.alpha = 0.6;
       uiArray = uiArray.concat(cardShadow);
 
       let cardImage = scene.add.image(cardPosition.x, cardPosition.y, imageKey)
-      cardImage.setScale(SCALE_CARDS).setOrigin(0, 0);
+      cardImage.setScale(SCALE_CARDS)//.setOrigin(0.5, 1.5);
+      cardImage.setOrigin(0, 0.5);
       uiArray = uiArray.concat(cardImage);
     }
 
-    let cardNumbersUI = displayCardNumberOnTopOfCard(scene, cardPosition, updatedNumberOfCardType, '32px', -1.8, -1.5, 45, 67);
+    let cardNumbersUI = displayCardNumberOnTopOfCard(scene, cardPosition, updatedNumberOfCardType, '32px', -1.8, 0, 45, 0);
     uiArray = uiArray.concat(cardNumbersUI);
 
-    this.container.add(uiArray);
+    let cardType = getCardType(imageKey);
+
+    this.cardContainers[cardType].add(uiArray);
   }
 
 }

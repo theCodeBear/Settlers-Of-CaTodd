@@ -40,6 +40,14 @@ const IMAGE = 'image';
 const COLOR = 'color';
 const OCEAN = 'ocean';
 const BACKGROUND_COLOR = 'backgroundColor';
+const DEVELOPMENT = 'development';
+const RESOURCE = 'resource';
+
+// used in src/utils
+const BOARD_MIDDLELEFT_X_COORD = 850;
+const BOARD_MIDDLELEFT_Y_COORD = 500;
+const TILE_X_FULL_OFFSET = 173;
+const TILE_Y_FULL_OFFSET = 150;
 
 
 export {
@@ -75,5 +83,12 @@ export {
   IMAGE,
   COLOR,
   OCEAN,
-  BACKGROUND_COLOR
+  BACKGROUND_COLOR,
+  DEVELOPMENT,
+  RESOURCE,
+
+  BOARD_MIDDLELEFT_X_COORD,
+  BOARD_MIDDLELEFT_Y_COORD,
+  TILE_X_FULL_OFFSET,
+  TILE_Y_FULL_OFFSET
 };

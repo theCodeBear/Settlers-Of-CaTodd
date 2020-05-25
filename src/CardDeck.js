@@ -8,13 +8,14 @@ import {
 const SCALE_BANK_CARDS = 0.5;
 const BANK_TEXT = "The Bank";
 const CARDS_UI_COORDS = {
-  [WOOD]: { x: 0, y: 50 },
-  [BRICK]: { x: 90, y: 50 },
-  [SHEEP]: { x: 180, y: 50 },
-  [WHEAT]: { x: 270, y: 50 },
-  [ORE]: { x: 360, y: 50 },
-  [DEV_CARD]: { x: 0, y: 180 }
+  [WOOD]: { x: -258.75, y: 0 },
+  [BRICK]: { x: -151.25, y: 0 },
+  [SHEEP]: { x: -43.75, y: 0 },
+  [WHEAT]: { x: 63.75, y: 0 },
+  [ORE]: { x: 171.25, y: 0 },
+  [DEV_CARD]: { x: -258.75, y: 120 }
 };
+
 
 export default class CardDeck {
   constructor(scene) {
@@ -101,13 +102,14 @@ export default class CardDeck {
       y: CARDS_UI_COORDS[imageKey].y
     };
     let cardShadow = scene.add.image(cardPosition.x, cardPosition.y, imageKey)
-    cardShadow.setScale(SCALE_BANK_CARDS).setOrigin(0, 0);
+    cardShadow.setScale(SCALE_BANK_CARDS).setOrigin(0, 1);
     cardShadow.alpha = EMPTY_DECK_ALPHA;
     scene.bankCardsUIContainer.add(cardShadow);
   }
 
   showCardsInBank(scene) {
-    const bankText = scene.add.text(0, 0, BANK_TEXT, { fontSize: '32px' });
+    const bankText = scene.add.text(0, -100, BANK_TEXT, { fontSize: '32px' });
+    bankText.setOrigin(0.5, 1);
     scene.bankCardsUIContainer.add(bankText);
     let bankResourceCards = [];
     let cardImage;
@@ -116,9 +118,9 @@ export default class CardDeck {
       if (numberOfCards === 0) continue;
 
       cardImage = scene.add.image(CARDS_UI_COORDS[key].x, CARDS_UI_COORDS[key].y, key);
-      cardImage.setScale(SCALE_BANK_CARDS).setOrigin(0, 0);
+      cardImage.setScale(SCALE_BANK_CARDS).setOrigin(0, 1);
       bankResourceCards = bankResourceCards.concat(cardImage);
-      displayCardNumberOnTopOfCard(scene, CARDS_UI_COORDS[key], numberOfCards, '16px', -16.2, -5.3, 333, 100);
+      displayCardNumberOnTopOfCard(scene, CARDS_UI_COORDS[key], numberOfCards, '16px', -16.6, -15, 342, 255, 0);
     }
     scene.bankCardsUIContainer.add(bankResourceCards);
   }

@@ -1,8 +1,9 @@
-
-const BOARD_MIDDLELEFT_X_COORD = 650;
-const BOARD_MIDDLELEFT_Y_COORD = 450;
-const TILE_X_FULL_OFFSET = 173;
-const TILE_Y_FULL_OFFSET = 150;
+import {
+  ORE, BRICK, WOOD, WHEAT, SHEEP,
+  KNIGHT, MONOPOLY, YEAR_OF_PLENTY, ROAD_BUILDING, VICTORY_POINT,
+  DEVELOPMENT, RESOURCE,
+  BOARD_MIDDLELEFT_X_COORD, BOARD_MIDDLELEFT_Y_COORD, TILE_X_FULL_OFFSET, TILE_Y_FULL_OFFSET
+} from './globalConstants';
 
 
 function calculateTilePixelCoords(tileXPosition, tileYPosition) {
@@ -41,10 +42,28 @@ function buttonRestState(button, originalTextColor = '#000') {
   document.body.style.cursor = 'default';
 }
 
+function getCardType(cardKey) {
+  switch (cardKey) {
+    case ORE:
+    case BRICK:
+    case WHEAT:
+    case WOOD:
+    case SHEEP:
+      return RESOURCE;
+    case KNIGHT:
+    case MONOPOLY:
+    case ROAD_BUILDING:
+    case YEAR_OF_PLENTY:
+    case VICTORY_POINT:
+      return DEVELOPMENT;
+  }
+}
+
 export {
   calculateTilePixelCoords,
   pickRandomIndex,
   randomizeArray,
   buttonHoverState,
-  buttonRestState
+  buttonRestState,
+  getCardType
 };

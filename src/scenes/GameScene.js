@@ -125,7 +125,7 @@ export default class GameScene extends Phaser.Scene {
     console.log('resource cards', this.resourceCards);
     console.log('dev cards', this.developmentCards);
 
-    this.bankCardsUIContainer = this.add.container(300, 50);
+    this.bankCardsUIContainer = this.add.container(50 + 258.75, window.innerHeight - 650).setSize(517.5, 250);
     this.playerDeck = new PlayerDeck(this);
     this.cardDeck = new CardDeck(this);
     this.player = new Player(this, this.playerDeck, this.playerName);
@@ -139,9 +139,9 @@ export default class GameScene extends Phaser.Scene {
     this.player.addResourceCard(BRICK, this.cardDeck);
     this.player.addResourceCard(SHEEP, this.cardDeck);
     this.player.addResourceCard(SHEEP, this.cardDeck);
-    // this.player.addResourceCard(WHEAT_CARD_KEY);
+    this.player.addResourceCard(WHEAT, this.cardDeck);
     this.player.addResourceCard(WOOD, this.cardDeck);
-    // this.player.addResourceCard(ORE_CARD_KEY);
+    this.player.addResourceCard(ORE, this.cardDeck);
 
     this.player.addDevelopmentCard(KNIGHT, this.cardDeck);
     this.player.addDevelopmentCard(ROAD_BUILDING, this.cardDeck);
@@ -327,7 +327,7 @@ export default class GameScene extends Phaser.Scene {
   }
 
   createTileStyleToggle() {
-    this.tileStyleChanger = this.add.text(50, 0, 'Change Tile Style', { fontSize: '32px', fill: '#000' });
+    this.tileStyleChanger = this.add.text(900, 0, 'Change Tile Style', { fontSize: '32px', fill: '#000' });
     this.tileStyleChanger
       .setInteractive()
       .on('pointerover', () => buttonHoverState(this.tileStyleChanger))
@@ -336,7 +336,7 @@ export default class GameScene extends Phaser.Scene {
   }
 
   createBackgroundStyleToggle() {
-    this.backgroundStyleChanger = this.add.text(500, 0, 'Change Background Style', { fontSize: '32px', fill: '#000' });
+    this.backgroundStyleChanger = this.add.text(1300, 0, 'Change Background Style', { fontSize: '32px', fill: '#000' });
     this.backgroundStyleChanger
       .setInteractive()
       .on('pointerover', () => buttonHoverState(this.backgroundStyleChanger))
@@ -345,7 +345,7 @@ export default class GameScene extends Phaser.Scene {
   }
 
   createRedoBoardButton() {
-    this.redoBoardButton = this.add.text(50, 50, 'Redo Board', { fontSize: '32px', fill: '#000' });
+    this.redoBoardButton = this.add.text(900, 50, 'Redo Board', { fontSize: '32px', fill: '#000' });
     this.redoBoardButton
       .setInteractive()
       .on('pointerover', () => buttonHoverState(this.redoBoardButton))
