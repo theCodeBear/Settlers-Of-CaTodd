@@ -15,6 +15,7 @@ import {
   DESERT_TILE_COLOR, ORE_TILE_COLOR, BRICK_TILE_COLOR, SHEEP_TILE_COLOR, WHEAT_TILE_COLOR, WOOD_TILE_COLOR,
   ORE, BRICK, WOOD, WHEAT, SHEEP,
   KNIGHT, MONOPOLY, YEAR_OF_PLENTY, ROAD_BUILDING, VICTORY_POINT,
+  ROAD, SETTLEMENT, CITY,
   DEV_CARD, IMAGE, COLOR, OCEAN, BACKGROUND_COLOR
 } from '../globalConstants';
 
@@ -112,8 +113,13 @@ export default class GameScene extends Phaser.Scene {
     this.load.image(VICTORY_POINT, assets.victoryPointCard);
     // back of development card
     this.load.image(DEV_CARD, assets.devCard)
+    // backgrounds
     this.load.image(OCEAN, assets.ocean);
     this.load.image(BACKGROUND_COLOR, assets.backgroundColor);
+    // player pieces
+    this.load.image(ROAD, assets.greenRoad);
+    this.load.image(SETTLEMENT, assets.greenSettlement);
+    this.load.image(CITY, assets.greenCity);
   }
 
   create() {

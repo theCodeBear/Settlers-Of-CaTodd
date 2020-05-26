@@ -4,11 +4,12 @@ import { getCardType } from '../utils';
 import {
   BRICK, WOOD, SHEEP, WHEAT, ORE,
   KNIGHT, ROAD_BUILDING, YEAR_OF_PLENTY, MONOPOLY, VICTORY_POINT,
+  ROAD, SETTLEMENT, CITY,
   EMPTY_DECK_ALPHA, DEVELOPMENT, RESOURCE
 } from '../globalConstants';
 
 
-const CARD_POSITIONS = {
+const DECK_POSITIONS = {
   [BRICK]: { x: -326.25, y: 0 },
   [WOOD]: { x: -191.75, y: 0 },
   [SHEEP]: { x: -57.25, y: 0 },
@@ -19,7 +20,11 @@ const CARD_POSITIONS = {
   [ROAD_BUILDING]: { x: -191.75, y: 0 },
   [YEAR_OF_PLENTY]: { x: -57.25, y: 0 },
   [MONOPOLY]: { x: 77.25, y: 0 },
-  [VICTORY_POINT]: { x: 211.75, y: 0 }
+  [VICTORY_POINT]: { x: 211.75, y: 0 },
+
+  [ROAD]: { x: -326, y: 0 },
+  [SETTLEMENT]: { x: -100, y: 0 },
+  [CITY]: { x: 126, y: 0 },
 };
 
 const NEXT_CARD_OFFSET_X = 10;
@@ -34,6 +39,7 @@ export default class PlayerDeck {
     this.cardContainers = {};
     this.cardContainers[DEVELOPMENT] = scene.add.container(25 + 326.25, windowHeight - 100);
     this.cardContainers[RESOURCE] = scene.add.container(25 + 326.25, windowHeight-300);
+    this.piecesContainer = scene.add.container(25 + 326.25, windowHeight-420);
 
     this.showEmptyCardPile(scene, BRICK);
     this.showEmptyCardPile(scene, WOOD);
@@ -48,10 +54,27 @@ export default class PlayerDeck {
     this.showEmptyCardPile(scene, VICTORY_POINT);
   }
 
+  displayUnitPieces(scene, numberOfUnusedRoads, numberOfUnusedSettlements, numberOfUnusedCities) {
+    // ROADS
+    let roadSprite = scene.add.image(DECK_POSITIONS[ROAD].x, DECK_POSITIONS[ROAD].y, ROAD).setOrigin(0, 0.5);
+    let roadCountText = scene.add.text(-230, 0, `x ${numberOfUnusedRoads}`, { fontSize: '32px', color: '#fff' }).setOrigin(0.5);
+    this.piecesContainer.add([roadSprite, roadCountText]);
+
+    // SETTLEMENTS
+    let settlementSprite = scene.add.image(DECK_POSITIONS[SETTLEMENT].x, DECK_POSITIONS[SETTLEMENT].y, SETTLEMENT).setOrigin(0, 0.5);
+    let settlementCountText = scene.add.text(0, 0, `x ${numberOfUnusedSettlements}`, { fontSize: '32px', color: '#fff' }).setOrigin(0.5);
+    this.piecesContainer.add([settlementSprite, settlementCountText]);
+
+    // CITIES
+    let citySprite = scene.add.image(DECK_POSITIONS[CITY].x, DECK_POSITIONS[CITY].y, CITY).setOrigin(0, 0.5).setScale(1.2);
+    let cityCountText = scene.add.text(225, 0, `x ${numberOfUnusedCities}`, { fontSize: '32px', color: '#fff' }).setOrigin(0.5);
+    this.piecesContainer.add([citySprite, cityCountText]);
+  }
+
   showEmptyCardPile(scene, imageKey) {
     const cardPosition = {
-      x: CARD_POSITIONS[imageKey].x,
-      y: CARD_POSITIONS[imageKey].y
+      x: DECK_POSITIONS[imageKey].x,
+      y: DECK_POSITIONS[imageKey].y
     };
     let cardGhost = scene.add.image(cardPosition.x, cardPosition.y, imageKey)
     cardGhost.setScale(SCALE_CARDS)//.setOrigin(1);
@@ -68,8 +91,8 @@ export default class PlayerDeck {
     let uiArray = [];
     let shadowOffset = { x: -7, y: 5 };
     const cardPosition = {
-      x: CARD_POSITIONS[imageKey].x + (numberOfCardsForOffset - 1) * NEXT_CARD_OFFSET_X,
-      y: CARD_POSITIONS[imageKey].y + (numberOfCardsForOffset - 1) * NEXT_CARD_OFFSET_Y
+      x: DECK_POSITIONS[imageKey].x + (numberOfCardsForOffset - 1) * NEXT_CARD_OFFSET_X,
+      y: DECK_POSITIONS[imageKey].y + (numberOfCardsForOffset - 1) * NEXT_CARD_OFFSET_Y
     };
 
     if (updatedNumberOfCardType <= MAX_CARDS_TO_SHOW) {

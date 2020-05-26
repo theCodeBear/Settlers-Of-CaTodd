@@ -36,6 +36,8 @@ export default class Player {
     this.road = 0;
     this.unusedRoads = 15;
 
+    this.playerDeck.displayUnitPieces(scene, this.unusedRoads, this.unusedSettlements, this.unusedCities);
+
     // somehow keep track of what tiles I have settlements and cities on
   }
 
@@ -140,6 +142,18 @@ export default class Player {
     this.roads += 1;
     this.unusedRoads -= 1;
     // build road logic
+  }
+
+  getNumberOfUnusedRoads() {
+    return this.unusedRoads;
+  }
+
+  getNumberOfUnusedSettlements() {
+    return this.unusedSettlements;
+  }
+
+  getNumberOfUnusedCities() {
+    return this.unusedCities;
   }
 
   getLargestArmy() {

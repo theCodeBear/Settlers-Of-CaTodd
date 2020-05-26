@@ -43,11 +43,16 @@ const BACKGROUND_COLOR = 'backgroundColor';
 const DEVELOPMENT = 'development';
 const RESOURCE = 'resource';
 
+const ROAD = 'road';
+const SETTLEMENT = 'settlement';
+const CITY = 'city';
+
 // used in src/utils
 const BOARD_MIDDLELEFT_X_COORD = 850;
 const BOARD_MIDDLELEFT_Y_COORD = 500;
 const TILE_X_FULL_OFFSET = 173;
 const TILE_Y_FULL_OFFSET = 150;
+
 
 
 export {
@@ -86,6 +91,10 @@ export {
   BACKGROUND_COLOR,
   DEVELOPMENT,
   RESOURCE,
+
+  ROAD,
+  SETTLEMENT,
+  CITY,
 
   BOARD_MIDDLELEFT_X_COORD,
   BOARD_MIDDLELEFT_Y_COORD,

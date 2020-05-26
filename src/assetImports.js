@@ -26,6 +26,10 @@ import yearOfPlentyCard from 'url:../public/img/yearOfPlentyCard.png';
 import roadBuildingCard from 'url:../public/img/roadBuildingCard.png';
 import victoryPointCard from 'url:../public/img/victoryPointCard.png';
 
+import greenRoad from 'url:../public/img/greenRoad.png';
+import greenSettlement from 'url:../public/img/greenSettlement.png';
+import greenCity from 'url:../public/img/greenCity.png';
+
 import devCard from 'url:../public/img/Catan_devcard.png';
 import backgroundColor from 'url:../public/img/backgroundColor_37d.png';
 import ocean from 'url:../public/img/ocean.png';
@@ -56,6 +60,10 @@ export default {
     yearOfPlentyCard,
     roadBuildingCard,
     victoryPointCard,
+
+    greenRoad,
+    greenSettlement,
+    greenCity,
 
     devCard,
     backgroundColor,
