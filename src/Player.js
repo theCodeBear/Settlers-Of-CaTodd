@@ -10,6 +10,7 @@ export default class Player {
     this.cardDeck = cardDeck;
 
     this.points = 0;
+    this.turnNumber = scene.players.findIndex(player => player.name === name);
 
     // resource cards
     this[BRICK] = 0;
@@ -124,7 +125,7 @@ export default class Player {
     if (this.unusedSettlements === 0) return;
     this.settlements += 1;
     this.unusedSettlements -= 1;
-    this.addPoints();
+    this.addPoints(this.scene);
     // build settlement logic
   }
 
@@ -134,7 +135,7 @@ export default class Player {
     this.unusedCities -= 1;
     this.settlements -= 1;
     this.unusedSettlements += 1;
-    this.addPoints();
+    this.addPoints(this.scene);
     // build city logic
   }
 
@@ -160,9 +161,10 @@ export default class Player {
   getLargestArmy(scene) {
     if (this.largestArmy) return;
     this.largestArmy = true;
-    this.addPoints(2);
+    this.addPoints(this.scene, 2);
     // if in bank, remove from bank
     this.cardDeck.removeLargestArmy(scene);
+    scene.players[this.turnNumber].setHasLargestArmy(true);
     // otherwise tell player who has it of event
   }
 
@@ -176,9 +178,10 @@ export default class Player {
   getLongestRoad(scene) {
     if (this.longestRoad) return;
     this.longestRoad = true;
-    this.addPoints(2);
+    this.addPoints(this.scene, 2);
     // if in bank, remove from bank
     this.cardDeck.removeLongestRoad(scene);
+    scene.players[this.turnNumber].setHasLongestRoad(true);
     // otherwise tell player who has it of event
   }
 
@@ -189,15 +192,17 @@ export default class Player {
     // logic...
   }
 
-  addPoints(newPoints = 1) {
+  addPoints(scene, newPoints = 1) {
     this.points += newPoints;
+    scene.players[this.turnNumber].setPoints(this.points);
     if (this.points >= 10) {
       // winning logic
     }
   }
 
-  subtractTwoPoints() {
+  subtractTwoPoints(scene) {
     this.points -= 2;
+    scene.players[this.turnNumber].setPoints(this.points);
   }
 
 }

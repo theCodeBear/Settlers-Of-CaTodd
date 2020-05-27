@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import assets from '../assetImports';
 import Player from '../Player';
+import PlayerTotalsDisplay from '../ui/PlayerTotalsDisplay';
 import PlayerDeck from '../ui/PlayerDeck';
 import CardDeck from '../CardDeck';
 import {
@@ -17,7 +18,7 @@ import {
   KNIGHT, MONOPOLY, YEAR_OF_PLENTY, ROAD_BUILDING, VICTORY_POINT,
   LARGEST_ARMY, LONGEST_ROAD,
   ROAD, SETTLEMENT, CITY,
-  DEV_CARD, IMAGE, COLOR, OCEAN, BACKGROUND_COLOR
+  DEV_CARD, IMAGE, COLOR, OCEAN, BACKGROUND_COLOR, RED, BROWN, BLUE, GREEN
 } from '../globalConstants';
 
 
@@ -30,8 +31,10 @@ export default class GameScene extends Phaser.Scene {
     super('game-scene');
     this.redoBoardButton;
     this.tileStyleChanger;
+    this.players = [];
     this.player;
     this.playerDeck;
+    this.playerName;
     this.cardDeck;
     this.bankCardsUIContainer;
     this.boardTileData = [];
@@ -81,8 +84,12 @@ export default class GameScene extends Phaser.Scene {
     };
   }
 
-  init({ playerName }) {
-    this.playerName = playerName;
+  init({ playerName, playerNames = ['todd', 'kent', 'yeony'] }) {
+    let defaultColors = [RED, BROWN, BLUE, GREEN]
+    this.playerName = playerName || playerNames[0];
+    this.players = playerNames.map((name, i) =>
+      new PlayerTotalsDisplay(name, i, defaultColors[i], this)
+    );
   }
 
   preload() {
@@ -142,6 +149,11 @@ export default class GameScene extends Phaser.Scene {
 
     this.cardDeck.showBankUI(this);
 
+    this.player.getLongestRoad(this);
+    this.player.getLargestArmy(this);
+
+    this.setPlayers();
+
     this.player.addResourceCard(BRICK, this.cardDeck);
     this.player.addResourceCard(BRICK, this.cardDeck);
     this.player.addResourceCard(BRICK, this.cardDeck);
@@ -168,6 +180,12 @@ export default class GameScene extends Phaser.Scene {
 
 
   // OTHER CLASS METHODS
+
+  setPlayers() {
+    this.players.forEach(player => {
+      player.displayPlayer(this, this.players.length);
+    });
+  }
 
   makeGameBoard() {
     this.boardTileData = this.createBoardPositions();

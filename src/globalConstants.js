@@ -43,6 +43,10 @@ const IMAGE = 'image';
 const COLOR = 'color';
 const OCEAN = 'ocean';
 const BACKGROUND_COLOR = 'backgroundColor';
+const RED = '0xac3232';
+const BROWN = '0xaf563b';
+const BLUE = '0x639bff';
+const GREEN = '0x6abe30';
 const DEVELOPMENT = 'development';
 const RESOURCE = 'resource';
 
@@ -52,7 +56,7 @@ const CITY = 'city';
 
 // used in src/utils
 const BOARD_MIDDLELEFT_X_COORD = 850;
-const BOARD_MIDDLELEFT_Y_COORD = 500;
+const BOARD_MIDDLELEFT_Y_COORD = 550;
 const TILE_X_FULL_OFFSET = 173;
 const TILE_Y_FULL_OFFSET = 150;
 
@@ -95,6 +99,10 @@ export {
   COLOR,
   OCEAN,
   BACKGROUND_COLOR,
+  RED,
+  BROWN,
+  BLUE,
+  GREEN,
   DEVELOPMENT,
   RESOURCE,
 
