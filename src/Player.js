@@ -3,10 +3,11 @@ import { BRICK, SHEEP, WHEAT, WOOD, ORE, KNIGHT, MONOPOLY, YEAR_OF_PLENTY, ROAD_
 
 
 export default class Player {
-  constructor(scene, playerDeck, name) {
+  constructor(scene, playerDeck, cardDeck, name) {
     this.scene = scene;
     this.name = name;
     this.playerDeck = playerDeck;
+    this.cardDeck = cardDeck;
 
     this.points = 0;
 
@@ -156,11 +157,13 @@ export default class Player {
     return this.unusedCities;
   }
 
-  getLargestArmy() {
+  getLargestArmy(scene) {
     if (this.largestArmy) return;
     this.largestArmy = true;
-    this.addPoint(2);
-    // logic...
+    this.addPoints(2);
+    // if in bank, remove from bank
+    this.cardDeck.removeLargestArmy(scene);
+    // otherwise tell player who has it of event
   }
 
   loseLargestArmy() {
@@ -170,11 +173,13 @@ export default class Player {
     // logic...
   }
 
-  getLongestRoad() {
+  getLongestRoad(scene) {
     if (this.longestRoad) return;
     this.longestRoad = true;
     this.addPoints(2);
-    // logic...
+    // if in bank, remove from bank
+    this.cardDeck.removeLongestRoad(scene);
+    // otherwise tell player who has it of event
   }
 
   loseLongestRoad() {

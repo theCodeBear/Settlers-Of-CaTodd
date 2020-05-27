@@ -15,6 +15,7 @@ import {
   DESERT_TILE_COLOR, ORE_TILE_COLOR, BRICK_TILE_COLOR, SHEEP_TILE_COLOR, WHEAT_TILE_COLOR, WOOD_TILE_COLOR,
   ORE, BRICK, WOOD, WHEAT, SHEEP,
   KNIGHT, MONOPOLY, YEAR_OF_PLENTY, ROAD_BUILDING, VICTORY_POINT,
+  LARGEST_ARMY, LONGEST_ROAD,
   ROAD, SETTLEMENT, CITY,
   DEV_CARD, IMAGE, COLOR, OCEAN, BACKGROUND_COLOR
 } from '../globalConstants';
@@ -120,6 +121,9 @@ export default class GameScene extends Phaser.Scene {
     this.load.image(ROAD, assets.greenRoad);
     this.load.image(SETTLEMENT, assets.greenSettlement);
     this.load.image(CITY, assets.greenCity);
+    // +2 vp cards
+    this.load.image(LARGEST_ARMY, assets.largestArmy);
+    this.load.image(LONGEST_ROAD, assets.longestRoad);
   }
 
   create() {
@@ -134,7 +138,7 @@ export default class GameScene extends Phaser.Scene {
     this.bankCardsUIContainer = this.add.container(50 + 258.75, window.innerHeight - 650).setSize(517.5, 250);
     this.playerDeck = new PlayerDeck(this);
     this.cardDeck = new CardDeck(this);
-    this.player = new Player(this, this.playerDeck, this.playerName);
+    this.player = new Player(this, this.playerDeck, this.cardDeck, this.playerName);
 
     this.cardDeck.showBankUI(this);
 
@@ -156,7 +160,7 @@ export default class GameScene extends Phaser.Scene {
 
     this.cardDeck.removeCard(YEAR_OF_PLENTY);
 
-    this.manuallyUpdate();
+    // this.manuallyUpdate();
   }
 
   // update() {

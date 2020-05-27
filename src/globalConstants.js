@@ -34,6 +34,9 @@ const MONOPOLY = 'monopoly';
 const ROAD_BUILDING = 'roadBuilding';
 const YEAR_OF_PLENTY = 'yearOfPlenty';
 
+const LARGEST_ARMY = 'largestArmy';
+const LONGEST_ROAD = 'longestRoad';
+
 const DEV_CARD = 'devCard';
 const EMPTY_DECK_ALPHA = 0.4;
 const IMAGE = 'image';
@@ -82,6 +85,9 @@ export {
   MONOPOLY,
   ROAD_BUILDING,
   YEAR_OF_PLENTY,
+
+  LARGEST_ARMY,
+  LONGEST_ROAD,
 
   DEV_CARD,
   EMPTY_DECK_ALPHA,

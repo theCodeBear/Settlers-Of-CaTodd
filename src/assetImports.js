@@ -26,6 +26,9 @@ import yearOfPlentyCard from 'url:../public/img/yearOfPlentyCard.png';
 import roadBuildingCard from 'url:../public/img/roadBuildingCard.png';
 import victoryPointCard from 'url:../public/img/victoryPointCard.png';
 
+import largestArmy from 'url:../public/img/largestArmy.png';
+import longestRoad from 'url:../public/img/longestRoad.png';
+
 import greenRoad from 'url:../public/img/greenRoad.png';
 import greenSettlement from 'url:../public/img/greenSettlement.png';
 import greenCity from 'url:../public/img/greenCity.png';
@@ -60,6 +63,9 @@ export default {
     yearOfPlentyCard,
     roadBuildingCard,
     victoryPointCard,
+
+    largestArmy,
+    longestRoad,
 
     greenRoad,
     greenSettlement,
